@@ -1,0 +1,1 @@
+Đây là thư mục author tự tạo với chức năng xác thực nhưng laravel đã tự tạo sẵn form login, register ở trong thư mục views/auth

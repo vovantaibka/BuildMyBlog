@@ -1,0 +1,75 @@
+body {
+    overflow-x: hidden;
+}
+
+#wrapper {
+    padding-left: 0;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+    position: relative;
+}
+
+#sidebar-wrapper {
+    z-index: 1000;
+    border: 2px solid #ffffff;
+    position: relative;
+    /*left: 250px;*/
+    width: 250px;
+    height: 550px;
+    /*margin-left: -250px;*/
+    overflow-y: auto;
+    background: #e7e7e7;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+.sidebar-nav {
+    position: relative;
+    top: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    margin-top: 20px;
+}
+
+.sidebar-nav li {
+    text-indent: 20px;
+    line-height: 40px;
+}
+
+.sidebar-nav li a {
+    font-size: 20px;
+    display: block;
+    text-decoration: none;
+    color: #777;
+}
+
+.sidebar-nav li a:hover {
+    text-decoration: none;
+    color: #000000;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-nav li a:active,
+.sidebar-nav li a:focus {
+    text-decoration: none;
+}
+
+.sidebar-nav > .sidebar-brand {
+    height: 65px;
+    font-size: 18px;
+    line-height: 60px;
+}
+
+.sidebar-nav > .sidebar-brand a {
+    color: #777;
+}
+
+.sidebar-nav > .sidebar-brand a:hover {
+    color: #000000;
+    background: none;
+}

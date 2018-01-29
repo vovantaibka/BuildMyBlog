@@ -1,0 +1,73 @@
+// SVG icons
+@mixin svg-icon-size($width, $height) {
+	width: 24px;
+	height: 24px;
+}
+
+$color-svg-icon: #4691f6;
+
+
+.svg-icon path,
+.svg-icon polygon,
+.svg-icon rect {
+	fill: $color-svg-icon;
+}
+
+.svg-icon circle {
+	stroke: #4691f6;
+	stroke-width: 1;
+}
+
+* {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+
+nav {
+	.profile-img img {
+		height: 60px;
+		width: 60px;
+		padding: 8px;
+		margin-left: 8px;
+		border-radius:50%;
+		-moz-border-radius:50%;
+		-webkit-border-radius:50%;
+	}
+	a {
+
+	}
+}
+
+.sidebar .svg-icon {
+	@include svg-icon-size(24px,24px);
+}
+
+.button-create-new {
+	float: right;	
+	margin-bottom: 10px;
+	button {
+		font-size: larger;
+		.svg-icon {
+			@include svg-icon-size(24px,24px);
+			path {
+				fill: white;
+			}
+		}
+	}
+}
+
+.table-responsive {
+	table {
+		width: 100%;
+		.svg-icon {
+			@include svg-icon-size(18px,18px);
+		}
+	}
+}
+
+// Modal 
+.modal-body {
+	padding-left: 50px;
+	padding-right: 50px;
+}

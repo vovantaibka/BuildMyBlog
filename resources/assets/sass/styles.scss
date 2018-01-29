@@ -1,0 +1,145 @@
+@mixin full-page {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+body {
+    @include full-page;
+}
+
+html {
+    @include full-page;
+}
+
+%margin_bottom_0 {
+    margin-bottom: 0px!important;
+}
+
+.navbar {
+    @extend %margin_bottom_0;
+}
+
+.alert {
+    @extend %margin_bottom_0;
+}
+
+#wrapper {
+    position: relative;
+    min-height: calc(100% - 72px);
+}
+
+#body {
+    background-color: #DAE3D2;
+    padding: 100px 40px;
+    min-height: 522px;
+}
+
+#footer {
+    color: #DAE3D2;
+    background-color: #434544;
+    padding: 25px 0px 25px 0px;
+}
+
+/* Page Home */
+.welcome-blog {
+    color: #DAE3D2;
+    background-color: #434544;
+    padding: 20px 20px 20px 20px;
+    margin-bottom: 40px;
+}
+
+.btn-primary {
+    background: #005A31;
+    border: 0.5px solid #fff;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+.btn-h1-spacing {
+    margin-top: 18px;
+}
+
+.form-spacing-top {
+    margin-top: 30px;
+}
+
+.comment {
+    margin-top: 30px;
+}
+
+.author-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    float: left;
+}
+
+.author-name {
+    float: left;
+    margin-left: 15px;
+}
+
+.author-name > h4 {
+    margin: 5px 0px;
+}
+
+.author-time {
+    font-size: 11px;
+    font-style: italic;
+    color: #aaa;
+}
+
+.comment-content {
+    clear: both;
+    margin-left: 65px;
+}
+
+.comments-title {                                                                           
+    margin-bottom: 45px;
+}
+
+/* Page Welcome */
+#welcome .post img {float: left; margin-right: 10px;}
+
+/* Page Blog */
+#blog .post {
+    img {
+        float: left; 
+        margin: 10px 10px 0px 0px;
+    }
+    .title {
+        margin-left: 110px;
+    }
+}
+
+/* Page Account Info */
+#account-info {
+    width: 70%; 
+    margin: auto; 
+    background-color: 
+    white; 
+    padding: 30px 20px;
+    h1 {
+        text-align: center; 
+        margin-bottom: 40px;
+    }
+    .avatar {
+        float: left; 
+        text-align: center;
+    }
+    .profile {
+        float: right; 
+        padding: 0px 50px 0px 100px;
+    }
+} 
+
+#changePwModal .modal-body {
+    margin: 20px 40px;
+}                                                                                                                                                                                                                                                             
+
+#modalLabel {
+    float: left;
+}
