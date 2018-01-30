@@ -66,6 +66,7 @@ Auth::routes();
 Route::get('/home', 'HomeController@index');
 
 Route::get('admin/list/{object?}', 'Ajax\CRUDController@getListObject');
+Route::get('admin/{object}/{id}', 'Ajax\CRUDController@viewObject');
 Route::delete('admin/delete/{object}/{id}', 'Ajax\CRUDController@deleteObject');
 
 // Test 

@@ -41,6 +41,19 @@ class CRUDController extends Controller
 		return $object;
 	}
 
+	public function viewObject($objectType, $id)
+	{
+		$object = $this->getObject($objectType, $id);
+		if($objectType == "post") {
+			return response()->json([
+				'title' => $object->title,
+				'body' => $object->body,
+				'category' => $object->category->name,
+				'tags' => $object->tags
+			]);
+		}
+	}
+
 	public function getListObject($object)
 	{
 		switch ($object) {
