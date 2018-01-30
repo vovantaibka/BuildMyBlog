@@ -990,7 +990,7 @@ var app = new Vue({
 /* 11 */
 /***/ (function(module, exports) {
 
-// removed by extract-text-webpack-plugin
+throw new Error("Module build failed: ModuleBuildError: Module build failed: \n}\n^\n      Invalid CSS after \"}\": expected 1 selector or at-rule, was '$(\"button#yes-modal'\n      in /var/www/html/MyBlog/resources/assets/sass/admin-styles.scss (line 78, column 2)\n    at runLoaders (/var/www/html/MyBlog/node_modules/webpack/lib/NormalModule.js:192:19)\n    at /var/www/html/MyBlog/node_modules/loader-runner/lib/LoaderRunner.js:364:11\n    at /var/www/html/MyBlog/node_modules/loader-runner/lib/LoaderRunner.js:230:18\n    at context.callback (/var/www/html/MyBlog/node_modules/loader-runner/lib/LoaderRunner.js:111:13)\n    at Object.asyncSassJobQueue.push [as callback] (/var/www/html/MyBlog/node_modules/sass-loader/lib/loader.js:55:13)\n    at Object.<anonymous> (/var/www/html/MyBlog/node_modules/sass-loader/node_modules/async/dist/async.js:2257:31)\n    at Object.callback (/var/www/html/MyBlog/node_modules/sass-loader/node_modules/async/dist/async.js:958:16)\n    at options.error (/var/www/html/MyBlog/node_modules/node-sass/lib/index.js:294:32)");
 
 /***/ }),
 /* 12 */

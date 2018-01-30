@@ -6,8 +6,10 @@
 
 <body>
 	@include('admin.partials._nav')
+	@include('modals.confirm')
 
 	<div id="wrapper">
+		@include('partials._messages')
 		<div class="container-fluid">
 			<div class="row">
 				@include('admin.partials._sidebar')

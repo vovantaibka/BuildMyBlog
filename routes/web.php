@@ -33,7 +33,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::put('account/{id}', ['uses' => 'AccountController@changePassword', 'as' => 'account.changepw']);
 
     // Admin
-    Route::get('admin/{id}', ['uses' => 'AdminController@show', 'as' => 'admin.show']);
+    Route::get('admin/{object?}', ['uses' => 'AdminController@show', 'as' => 'admin.show']);
     // Route::get('admin/blog/users', ['uses' => 'AdminController@getUsers', 'as' => 'admin.users']);
     // Route::get('admin/blog/posts', ['uses' => 'AdminController@getPosts', 'as' => 'admin.posts']);
 
@@ -66,6 +66,7 @@ Auth::routes();
 Route::get('/home', 'HomeController@index');
 
 Route::get('admin/list/{object?}', 'Ajax\CRUDController@getListObject');
+Route::delete('admin/delete/{object}/{id}', 'Ajax\CRUDController@deleteObject');
 
 // Test 
 Route::get('test/map', 'Test\TestController@testGoogleMapApi');

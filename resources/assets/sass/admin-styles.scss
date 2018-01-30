@@ -66,8 +66,15 @@ nav {
 	}
 }
 
-// Modal 
+// Modal
+#modal-confirm .modal-body button {
+	width: 65px;
+	margin: 10px 5px; 
+}
+
 .modal-body {
 	padding-left: 50px;
 	padding-right: 50px;
 }
+
+$("button#yes-modal-confirm").click(function() {})

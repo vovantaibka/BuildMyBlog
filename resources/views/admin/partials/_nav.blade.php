@@ -1,8 +1,10 @@
 <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
   <div class="profile-img">
-    <img src="{{ asset('imgs/' . Auth::user()->image) }}" class="" alt="Profile Image">
+    <a href="/">
+      <img src="{{ asset('imgs/' . Auth::user()->image) }}" class="" alt="Profile Image">
+    </a>
   </div>
-  <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="{{ route('admin.show', Auth::user()->id) }}">Hello {{ Auth::user()->name }}</a>
+  <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="{{ route('admin.show', 'home') }}">Hello {{ Auth::user()->name }}</a>
   <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
   <ul class="navbar-nav px-3">
     <li class="nav-item text-nowrap">

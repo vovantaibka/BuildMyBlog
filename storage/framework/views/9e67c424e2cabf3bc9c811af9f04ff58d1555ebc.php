@@ -59,7 +59,7 @@
 
         <?php echo e(Form::label('featured_image', 'Upload Featured Image:')); ?>
 
-        <?php echo e(Form::file('featured_image', ['style' => 'margin-bottom: 5px'])); ?>
+        <?php echo e(Form::file('featured_image', ['class' => 'form-control', 'style' => 'margin-bottom: 5px'])); ?>
 
 
         <?php echo e(Form::label('body', "Post Body:")); ?>

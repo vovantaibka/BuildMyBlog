@@ -9,21 +9,9 @@ use App\Post;
 
 class AdminController extends AccountController
 {
-	public function show($id) 
+	public function show($object) 
 	{
 		$user = Auth::user();
-		return view('admin.show')->withUser($user);
+		return view('admin.show')->withUser($user)->withObject($object);
 	}
-
-	// public function getUsers()
-	// {
-	// 	$users = User::all();
-	// 	return view('admin.blog.users')->withUsers($users);
-	// }
-
-	// public function getPosts()
-	// {
-	// 	$posts = Post::all();
-	// 	return view('admin.blog.posts')->withPosts($posts);
-	// }
 }

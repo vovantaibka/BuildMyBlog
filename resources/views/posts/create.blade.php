@@ -49,7 +49,7 @@
         </select>
 
         {{ Form::label('featured_image', 'Upload Featured Image:') }}
-        {{ Form::file('featured_image', ['style' => 'margin-bottom: 5px']) }}
+        {{ Form::file('featured_image', ['class' => 'form-control', 'style' => 'margin-bottom: 5px']) }}
 
         {{Form::label('body', "Post Body:")}}
         {{Form::textarea('body', null, ['class' => 'form-control'])}}
