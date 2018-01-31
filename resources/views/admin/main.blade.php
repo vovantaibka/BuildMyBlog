@@ -18,7 +18,9 @@
 		</div>
 	</div>
 	
-	@include('admin.partials._javascript')
-	@yield('scripts')
+	<div id="scripts">
+		@include('admin.partials._javascript')
+		@yield('scripts')
+	</div>
 </body>
 </html>

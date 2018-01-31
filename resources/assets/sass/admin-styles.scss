@@ -4,6 +4,10 @@
 	height: 24px;
 }
 
+* {
+	box-sizing: border-box;
+}
+
 $color-svg-icon: #4691f6;
 
 
@@ -72,9 +76,20 @@ nav {
 	margin: 10px 5px; 
 }
 
+#create-and-edit-post {
+	.upload-file {
+		overflow: auto;
+		img {
+			float: left;
+		}
+		label, input {
+			width: calc(100% - 110px);
+			float: right;
+		}
+	}
+}
+
 .modal-body {
 	padding-left: 50px;
 	padding-right: 50px;
 }
-
-$("button#yes-modal-confirm").click(function() {})

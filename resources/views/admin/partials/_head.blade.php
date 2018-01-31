@@ -12,8 +12,8 @@
 {{-- <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script> --}}
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
 
-{{-- {!!Html::style('css/parsley.css')!!} --}}
-{{-- {!!Html::style('css/select2.min.css')!!} --}}
+{!!Html::style('css/parsley.css')!!}
+{!!Html::style('css/select2.min.css')!!}
 {!!Html::style('css/admin-styles.css')!!}
 
 {{-- <script src='https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=5g5faf78gvk6yfq9bd3bbfjo858kjx1q8o0nbiwtygo2e4er'></script>
@@ -26,6 +26,8 @@
 
 	});
 </script> --}}
+
+<script src='https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=5g5faf78gvk6yfq9bd3bbfjo858kjx1q8o0nbiwtygo2e4er'></script>
 
 @yield('admin-stylesheets')
 

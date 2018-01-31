@@ -2,7 +2,7 @@
 	<input id="current-object" type="hidden" name="current object" value="post">
 	<h2>All Posts</h2>
 	<div class="button-create-new">
-		<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#create-new-post">
+		<button type="button" class="btn btn-primary btn-sm create">
 			<svg class="svg-icon" viewBox="0 0 20 20">
 				<path d="M14.613,10c0,0.23-0.188,0.419-0.419,0.419H10.42v3.774c0,0.23-0.189,0.42-0.42,0.42s-0.419-0.189-0.419-0.42v-3.774H5.806c-0.23,0-0.419-0.189-0.419-0.419s0.189-0.419,0.419-0.419h3.775V5.806c0-0.23,0.189-0.419,0.419-0.419s0.42,0.189,0.42,0.419v3.775h3.774C14.425,9.581,14.613,9.77,14.613,10 M17.969,10c0,4.401-3.567,7.969-7.969,7.969c-4.402,0-7.969-3.567-7.969-7.969c0-4.402,3.567-7.969,7.969-7.969C14.401,2.031,17.969,5.598,17.969,10 M17.13,10c0-3.932-3.198-7.13-7.13-7.13S2.87,6.068,2.87,10c0,3.933,3.198,7.13,7.13,7.13S17.13,13.933,17.13,10"></path>
 			</svg>
@@ -54,21 +54,23 @@
 		</table>
 	</div>
 
-	{{-- Modal Create New Post--}}
-	<div class="modal fade" id="create-new-post" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	{{-- Modal create and edit post--}}
+	<div class="modal fade" id="create-and-edit-post" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
 
 				{{-- Info https://laravelcollective.com/docs/5.3/html --}}
 				{{-- Để validate data từ form thì sử dụng parsleyjs - Đây là một library của js - Info http://parsleyjs.org/doc/index.html --}}
-				{!! Form::open(['route' => 'posts.store', 'data-parsley-validate' => '', 'files' => true]) !!}
+				{!! Form::open(['route' => 'posts.store', 'data-parsley-validate' => '', 'files' => true, 'id' => 'form-post']) !!}
 				<div class="modal-header">
-					<h5 class="modal-title" id="label">Create New Post</h5>
+					<h5 class="modal-title" id="title-modal-create-edit">Create New Post</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body">
+					<input type="hidden" name="action" value="create">
+					<input type="hidden" name="post_id" value="">
 					<div class="form-group">
 						{{Form::label('title', 'Title:')}}
 						{{Form::text('title', null, ['class' => 'form-control', 'required' => '', 'maxlength' => '255'])}}
@@ -81,7 +83,7 @@
 
 					<div class="form-group">
 						{{ Form::label('category_id', 'Category:') }}
-						<select class="form-control" name="category_id">
+						<select class="form-control" id="category_id" name="category_id">
 							@foreach($categories as $category)
 							<option value="{{ $category->id }}">{{ $category->name }}</option>
 							@endforeach
@@ -90,33 +92,36 @@
 
 					<div class="form-group">
 						{{ Form::label('tags', 'Tags:') }}
-						<select class="form-control select2-multi" name="tags[]" multiple="multiple">
+						<select class="form-control select2-multi" id="tags" name="tags[]" multiple="multiple">
 							@foreach($tags as $tag)
 							<option value="{{ $tag->id }}">{{ $tag->name }}</option>
 							@endforeach
 						</select>
 					</div>
 
-					<div class="form-group">
+					<div class="form-group upload-file">
+						<img src="#">
 						{{ Form::label('featured_image', 'Upload Featured Image:') }}
-						{{ Form::file('featured_image', ['class' => 'form-control', 'style' => 'margin-bottom: 5px']) }}
+						{{ Form::file('featured_image', ['class' => '', 'style' => 'margin-bottom: 5px']) }}
 					</div>
 
 					<div class="form-group">
 						{{Form::label('body', "Post Body:")}}
-						{{Form::textarea('body', null, ['class' => 'form-control'])}}
+						{{Form::textarea('body', null, ['class' => 'form-control', 'id' => 'tinymce-textarea'])}}
 					</div>
 				</div>
 				<div class="modal-footer">
-					{{Form::button('Close', ['class' => 'btn btn-secondary', 'style' => 'margin-top: 20px;', 'data-dismiss' => 'modal'])}}
-					{{Form::submit('Create Post', ['class' => 'btn btn-primary', 'style' => 'margin-top: 20px;'])}}
+					<div class="form-group">
+						{{Form::button('Close', ['class' => 'btn btn-secondary', 'data-dismiss' => 'modal'])}}
+						{{Form::submit('Create Post', ['class' => 'btn btn-primary', 'id' => 'button-submit'])}}
+					</div>
 				</div>
 				{!! Form::close() !!}
 			</div>
 		</div>	
 	</div>
 
-	{{-- Modal View Post --}}
+	{{-- Modal view post --}}
 	<div class="modal fade" id="view-post" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
@@ -136,36 +141,39 @@
 			</div>
 		</div>	
 	</div>
+	<script src="{{asset('js/admin/ajax-crud.js')}}"></script>
+
+	<script type="text/javascript">
+		$(function() {
+			$(".select2-multi").select2();
+			$(".select2-multi").select2().val({!! json_encode($post->tags()->allRelatedIds()) !!}).trigger('change');
+			$("span.select2").css('width', '100%');
+
+			// Tinymce Editor
+			tinymce.remove(); 
+			
+			tinymce.init({
+				selector: 'textarea',
+				plugins: "link code image",
+				menubar: false
+			});
+
+			// Prevent bootstrap dialog from blocking focusin
+			$(document).on('focusin', function(e) {
+				if ($(e.target).closest(".mce-window").length) {
+					e.stopImmediatePropagation();
+				}
+			});
+
+			$('#open').click(function() {
+				$("#dialog").dialog({
+					width: 800,
+					modal: true
+				});
+			});
+			// End Config Tinymce Editor
+		})
+	</script>
 </main>
 
-<script src="{{asset('js/admin/ajax-crud.js')}}"></script>
-
-<script type="text/javascript">	
-	$(function() {
-		$(".select2-multi").select2();
-		$("span.select2").css('width', '100%');
-	})
-	
-	// Tinymce Editor
-	tinymce.init({
-		selector: 'textarea',
-		plugins: "link code image",
-		menubar: false
-	});
-
-	// Prevent bootstrap dialog from blocking focusin
-	$(document).on('focusin', function(e) {
-		if ($(e.target).closest(".mce-window").length) {
-			e.stopImmediatePropagation();
-		}
-	});
-
-	$('#open').click(function() {
-		$("#dialog").dialog({
-			width: 800,
-			modal: true
-		});
-	});
-	// End Config Tinymce Editor
-</script>
 

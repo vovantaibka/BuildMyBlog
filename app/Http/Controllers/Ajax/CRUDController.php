@@ -45,13 +45,24 @@ class CRUDController extends Controller
 	{
 		$object = $this->getObject($objectType, $id);
 		if($objectType == "post") {
+			$tags = array();
+			foreach ($object->tags as $tag) {
+				$tags[] = $tag->id;
+			}
 			return response()->json([
+				'id' => $object->id,
 				'title' => $object->title,
+				'slug' => $object->slug,
 				'body' => $object->body,
 				'category' => $object->category->name,
-				'tags' => $object->tags
+				'category_id' => $object->category->id,
+				'tags' => $object->tags,
+				'tags_id' => $tags,
+				'featured_image' => $object->image,
+				'img_url' => asset('imgs/' . $object->image),
+				'action' => redirect()->route('posts.update', $object->id)
 			]);
-		}
+		}	
 	}
 
 	public function getListObject($object)
@@ -61,23 +72,31 @@ class CRUDController extends Controller
 			$listObject = User::all();
 			$view = view('admin.blog.home');
 			break;
+
 			case 'user':
 			$listObject = User::all();
 			$view = view('admin.blog.users')->withUsers($listObject);
 			break;
+
 			case 'post':
 			$listObject = Post::all();
 			$categories = Category::all();
 			$tags = Tag::all();
 			$view = view('admin.blog.posts')->withPosts($listObject)->withCategories($categories)->withTags($tags);
 			break;
+
 			case 'category':
 			$listObject = Category::all();
 			$view = view('admin.blog.categories')->withCategories($listObject);
 			break;
+
 			case 'tag':
 			$listObject = Tag::all();
 			$view = view('admin.blog.tags')->withTags($listObject);
+			break;
+
+			case 'vocabulary':
+			$view = view('admin.english.vocabulary');
 			break;
 			
 			default:

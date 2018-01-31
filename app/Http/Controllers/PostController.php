@@ -52,43 +52,48 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        // validate the data. Info https://laravel.com/docs/5.4/validation#available-validation-rules
-        $this->validate($request, array(
-            'title' => 'required|max:255',
-            'slug' => 'required|alpha_dash|min:5|max:255',
-            'category_id' => 'required|integer',
-            'body' => 'required'
-        ));
+        if($request->action === "create") {
+            // validate the data. Info https://laravel.com/docs/5.4/validation#available-validation-rules
+            $this->validate($request, array(
+                'title' => 'required|max:255',
+                'slug' => 'required|alpha_dash|min:5|max:255',
+                'category_id' => 'required|integer',
+                'body' => 'required'
+            ));
 
-        // store in the database
-        $post = new Post;
+            // store in the database
+            $post = new Post;
 
-        $post->title = $request->title;
-        $post->slug = $request->slug;
-        $post->category_id = $request->category_id;
-        $post->body = $request->body;
+            $post->title = $request->title;
+            $post->slug = $request->slug;
+            $post->category_id = $request->category_id;
+            $post->body = $request->body;
 
-        //Save image
-        if ($request->hasFile('featured_image')) {
-            $image = $request->file('featured_image');
-            $filename = time() . '.' . $image->getClientOriginalExtension();
-            $location = public_path('imgs/' . $filename);
-            Image::make($image)->widen(100)->save($location);
+            // Save image
+            if ($request->hasFile('featured_image')) {
+                $image = $request->file('featured_image');
+                $filename = time() . '.' . $image->getClientOriginalExtension();
+                $location = public_path('imgs/' . $filename);
+                Image::make($image)->widen(100)->save($location);
 
-            $post->image = $filename;
+                $post->image = $filename;
+            }
+
+            $post->save();
+
+            // Gắn các giá trị tương ứng vào bảng post_tag
+
+            if (!is_null($request->tags)) {
+                $post->tags()->sync($request->tags, false);
+            }
+
+            Session::flash('success', 'The blog post was successfully save!');
+
+        } else {
+            $this->update($request, $request->post_id);            
         }
-
-        $post->save();
-
-        //Gắn các giá trị tương ứng vào bảng post_tag
-
-        if (!is_null($request->tags)) {
-            $post->tags()->sync($request->tags, false);
-        }
-
-        Session::flash('success', 'The blog post was successfully save!');
-
-        return redirect()->route('admin.show', 'post');
+        return redirect()->route('admin.show', 'post'); 
+        
     }
 
     /**
@@ -188,7 +193,6 @@ class PostController extends Controller
         Session::flash('success', 'This post was successfully saved.');
 
         //redirect with flass data to posts.show
-        return redirect()->route('posts.show', $post->id);
     }
 
     /**

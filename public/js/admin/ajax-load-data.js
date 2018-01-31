@@ -4,8 +4,7 @@ $(function() {
 
 	loadData(object);
 
-	$("[id=management]").click(function() {
-
+	$("[id=management]").on('click', function() {
 		$("#mceu_28").hide();
 
 		currentObject = $(this).children().first().val();

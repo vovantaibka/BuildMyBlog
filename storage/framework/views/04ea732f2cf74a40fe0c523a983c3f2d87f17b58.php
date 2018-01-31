@@ -19,3 +19,6 @@
 
 <!-- Graphs -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+
+<!-- Load the data when changing the object management -->
+<script src="<?php echo e(asset('js/admin/ajax-load-data.js')); ?>"></script>

@@ -18,7 +18,9 @@
 		</div>
 	</div>
 	
-	<?php echo $__env->make('admin.partials._javascript', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-	<?php echo $__env->yieldContent('scripts'); ?>
+	<div id="scripts">
+		<?php echo $__env->make('admin.partials._javascript', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+		<?php echo $__env->yieldContent('scripts'); ?>
+	</div>
 </body>
 </html>
