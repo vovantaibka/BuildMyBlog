@@ -47,14 +47,17 @@ class TagController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, array('name' => 'required|max:255'));
-        $tag = new Tag;
-        $tag->name = $request->name;
-        $tag->save();
+        if($request->action === "create") {
+            $this->validate($request, array('name' => 'required|max:255'));
+            $tag = new Tag;
+            $tag->name = $request->name;
+            $tag->save();
 
-        Session::flash('success', 'New Tag was successfully created!');
-
-        return redirect()->route('tags.index');
+            Session::flash('success', 'New Tag was successfully created!');
+        } else {
+            $this->update($request, $request->tag_id);      
+        }
+        return redirect()->route('admin.show', 'tag'); 
     }
 
     /**

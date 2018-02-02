@@ -27,7 +27,6 @@
 					<th><?php echo e($post->id); ?></th>
 					<td><?php echo e($post->title); ?></td>
 					<td><?php echo e($post->category->name); ?></td>
-					
 					<td><?php echo e(date('M j, Y H:i', strtotime($post->created_at))); ?></td>
 					<td><?php echo e(date('M j, Y H:i', strtotime($post->updated_at))); ?></td>
 					<td class="text-center">
@@ -154,7 +153,7 @@
 			</div>
 		</div>	
 	</div>
-	<script src="<?php echo e(asset('js/admin/ajax-crud.js')); ?>"></script>
+	<script src="<?php echo e(asset('js/admin/ajax-crud-post.js')); ?>"></script>
 
 	<script type="text/javascript">
 		$(function() {

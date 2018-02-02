@@ -75,4 +75,9 @@ class PagesController extends Controller
 
         return redirect('/');
     }
+
+    public function getListenAndRead() 
+    {
+        return view('pages.listenandread');
+    }
 }

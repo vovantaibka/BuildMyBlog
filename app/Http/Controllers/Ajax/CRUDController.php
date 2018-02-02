@@ -44,7 +44,9 @@ class CRUDController extends Controller
 	public function viewObject($objectType, $id)
 	{
 		$object = $this->getObject($objectType, $id);
-		if($objectType == "post") {
+		
+		switch ($objectType) {
+			case 'post':
 			$tags = array();
 			foreach ($object->tags as $tag) {
 				$tags[] = $tag->id;
@@ -62,7 +64,26 @@ class CRUDController extends Controller
 				'img_url' => asset('imgs/' . $object->image),
 				'action' => redirect()->route('posts.update', $object->id)
 			]);
-		}	
+			break;
+			
+			case 'category':
+			return response()->json([
+				'id' => $object->id,
+				'name' => $object->name
+			]);
+			break;
+
+			case 'tag':
+			return response()->json([
+				'id' => $object->id,
+				'name' => $object->name
+			]);
+			break;
+
+			default:
+				# code...
+			break;
+		}
 	}
 
 	public function getListObject($object)
@@ -97,6 +118,10 @@ class CRUDController extends Controller
 
 			case 'vocabulary':
 			$view = view('admin.english.vocabulary');
+			break;
+
+			case 'listening':
+			$view = view('admin.english.listening');
 			break;
 			
 			default:

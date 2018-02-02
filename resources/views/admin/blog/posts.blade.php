@@ -27,7 +27,6 @@
 					<th>{{ $post->id }}</th>
 					<td>{{ $post->title }}</td>
 					<td>{{ $post->category->name }}</td>
-					{{-- <td>{{ substr(strip_tags($post->body), 0, 50) }}{{ strlen(strip_tags($post->body)) > 50 ? "..." : "" }}</td> --}}
 					<td>{{ date('M j, Y H:i', strtotime($post->created_at)) }}</td>
 					<td>{{ date('M j, Y H:i', strtotime($post->updated_at)) }}</td>
 					<td class="text-center">
@@ -141,7 +140,7 @@
 			</div>
 		</div>	
 	</div>
-	<script src="{{asset('js/admin/ajax-crud.js')}}"></script>
+	<script src="{{asset('js/admin/ajax-crud-post.js')}}"></script>
 
 	<script type="text/javascript">
 		$(function() {

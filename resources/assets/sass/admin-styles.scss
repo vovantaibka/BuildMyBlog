@@ -71,9 +71,9 @@ nav {
 }
 
 // Modal
-#modal-confirm .modal-body button {
+#confirm .modal-body button {
 	width: 65px;
-	margin: 10px 5px; 
+	margin: 10px 5px;
 }
 
 #create-and-edit-post {
@@ -87,6 +87,10 @@ nav {
 			float: right;
 		}
 	}
+}
+
+#view-post .tags span {
+	margin-right: 5px;
 }
 
 .modal-body {

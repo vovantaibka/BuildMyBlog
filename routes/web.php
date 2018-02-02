@@ -58,6 +58,10 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('contact', 'PagesController@getContact');
     Route::post('contact', 'PagesController@postContact');
 
+    // English 
+    Route::resource('audios', 'AudioController');
+
+    Route::get('/listenandread', 'PagesController@getListenAndRead');
 });
 
 

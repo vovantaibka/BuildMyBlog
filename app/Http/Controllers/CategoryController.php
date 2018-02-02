@@ -51,19 +51,24 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, array(
-            'name' => 'required|max:255'
-        ));
+        if($request->action === "create") {
+            $this->validate($request, array(
+                'name' => 'required|max:255'
+            ));
 
-        $category = new Category;
+            $category = new Category;
 
-        $category->name = $request->name;
+            $category->name = $request->name;
 
-        $category->save();
+            $category->save();
 
-        Session::flash('success', 'New Category has been created');
+            Session::flash('success', 'New Category has been created');
 
-        return redirect()->route('categories.index');
+
+        } else {
+            $this->update($request, $request->category_id);  
+        }
+        return redirect()->route('admin.show', 'category');
     }
 
     /**
@@ -107,8 +112,6 @@ class CategoryController extends Controller
         $category->save();
 
         Session::flash('success', 'Successfully saved your new Category!');
-
-        return redirect()->route('categories.show', $id);
     }
 
     /**

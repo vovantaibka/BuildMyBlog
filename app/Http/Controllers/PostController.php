@@ -93,7 +93,6 @@ class PostController extends Controller
             $this->update($request, $request->post_id);            
         }
         return redirect()->route('admin.show', 'post'); 
-        
     }
 
     /**
@@ -191,8 +190,6 @@ class PostController extends Controller
 
         //Set flash data with success message
         Session::flash('success', 'This post was successfully saved.');
-
-        //redirect with flass data to posts.show
     }
 
     /**
