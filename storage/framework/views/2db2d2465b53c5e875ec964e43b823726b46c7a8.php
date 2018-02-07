@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-inverse" id="navbar">
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
@@ -9,25 +9,24 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#">My Blog</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav nav-tabs navbar-nav" id="menu-list">
-            <li class="<?php echo e(Request::is('/') ? "active" : ""); ?>"><a href="/">My Home<span
+            <li class="<?php echo e(Request::is('/') ? "active" : ""); ?>"><a href="/"><strong>My Home</strong><span
                 class="sr-only">(current)</span></a></li>
-                <li class="<?php echo e(Request::is('blog') ? "active" : ""); ?>"><a href="/blog">Blog</a></li>
+                <li class="<?php echo e(Request::is('blog') ? "active" : ""); ?>"><a href="/blog"><strong>Blog</strong></a></li>
                 <li role="presentation" class="dropdown <?php echo e(Request::is('listenandread') ? "active" : ""); ?>">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                      Learn English <span class="caret"></span>
+                    <strong>Learn English</strong><span class="caret"></span>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a href="/listenandread">Listen & Read</a></li>
+                    <li><a href="/listenandread"><strong>Listen & Read</strong></a></li>
                 </ul>
             </li>
-            <li class="<?php echo e(Request::is('about') ? "active" : ""); ?>"><a href="/about">About</a></li>
-            <li class="<?php echo e(Request::is('contact') ? "active" : ""); ?>"><a href="/contact">Contact</a></li>
+            <li class="<?php echo e(Request::is('about') ? "active" : ""); ?>"><a href="/about"><strong>About</strong></a></li>
+            <li class="<?php echo e(Request::is('contact') ? "active" : ""); ?>"><a href="/contact"><strong>Contact</strong></a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <?php if(Auth::check()): ?>

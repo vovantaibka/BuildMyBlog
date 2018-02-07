@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+
 use App\Audio;
+use Session;
+use Image;
 
 class AudioController extends Controller
 {
@@ -35,7 +39,29 @@ class AudioController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if($request->action === "create") {
+            $audio = new Audio;
+
+            $audio->title = $request->title;
+            $audio->link = $request->link;
+            $audio->introduce = $request->introduce;
+
+            if ($request->hasFile('audio_image')) {
+                $image = $request->file('audio_image');
+                $filename = time() . '.' . $image->getClientOriginalExtension();
+                $location = public_path('imgs/' . $filename);
+                Image::make($image)->widen(300)->save($location);
+
+                $audio->image = $filename;
+            }
+
+            $audio->save();
+
+            Session::flash('success', 'The audio was successfully save!');
+        } else {
+
+        }
+        return redirect()->route('admin.show', 'audio');
     }
 
     /**

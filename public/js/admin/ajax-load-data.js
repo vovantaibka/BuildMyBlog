@@ -1,4 +1,9 @@
 $(function() {
+	var currentNavItem;
+	var previousNavItem = $("#admin-page");
+
+	var currentSubMenu;
+
 	var currentObject = $("input#object").val();
 	var object = currentObject;
 
@@ -7,10 +12,40 @@ $(function() {
 	$("[id=management]").on('click', function() {
 		$("#mceu_28").hide();
 
-		currentObject = $(this).children().first().val();
+		currentNavItem = $(this);
 
-		loadData(currentObject);
+		previousNavItem.removeClass('nav-select');
+		currentNavItem.addClass('nav-select');
+
+		previousNavItem = currentNavItem;
+
+		var subMenu = $(this).siblings('div.submenu');
+
+		if(!subMenu[0]) {
+			if(currentSubMenu) {
+				currentSubMenu.hide();
+			}
+
+			$(this).addClass('nav-select');
+
+			currentObject = $(this).children().first().val();
+			loadData(currentObject);
+		} else {
+			currentSubMenu = subMenu;
+
+			var height = $('nav.sidebar').height();
+			var width = $('nav.sidebar').width();
+
+			subMenu.css('height', height);
+			subMenu.css('width', width + 40);
+
+			subMenu.show();
+		}
 	});
+
+	$('a.close-submenu').on('click', function() {
+		currentSubMenu.hide();
+	})
 
 	function loadData(object) {
 		var url = "http://127.0.0.1:8000/admin/list";

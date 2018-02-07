@@ -4,16 +4,24 @@ namespace App\Http\Controllers\Ajax;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Auth\Middleware\Authenticate;
 use App\User;
 use App\Post;
 use App\Category;
 use App\Tag;
+use App\Audio;
+use App\CategoryAudio;
 use Session;
 use Image;
 use Storage;
 
 class CRUDController extends Controller
 {
+	public function __construct()
+	{
+		$this->middleware('auth');
+	}
+
 	public function getObject($objectType, $id)
 	{
 		$object = null;
@@ -120,8 +128,10 @@ class CRUDController extends Controller
 			$view = view('admin.english.vocabulary');
 			break;
 
-			case 'listening':
-			$view = view('admin.english.listening');
+			case 'audio':
+			$listObject = Audio::all();
+			$categories = CategoryAudio::all();
+			$view = view('admin.english.audios')->withAudios($listObject)->withCategories($categories);
 			break;
 			
 			default:

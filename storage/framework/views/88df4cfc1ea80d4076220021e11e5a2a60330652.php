@@ -3,7 +3,6 @@
 <?php $__env->startSection('title', '| Contact'); ?>
 
 <?php $__env->startSection('content'); ?>
-    <link rel="stylesheet" href="<?php echo e(URL::asset('css/about-contact.css')); ?>"/>
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <h1>Contact Me</h1>

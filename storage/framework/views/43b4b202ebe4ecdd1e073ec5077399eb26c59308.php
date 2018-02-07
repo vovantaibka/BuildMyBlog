@@ -161,6 +161,8 @@
 			$(".select2-multi").select2().val(<?php echo json_encode($post->tags()->allRelatedIds()); ?>).trigger('change');
 			$("span.select2").css('width', '100%');
 
+			$('#form-post').parsley();
+
 			// Tinymce Editor
 			tinymce.remove(); 
 			

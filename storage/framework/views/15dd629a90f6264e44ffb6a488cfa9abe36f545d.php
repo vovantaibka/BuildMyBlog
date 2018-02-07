@@ -11,6 +11,9 @@
 <!-- JQuery -->
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
 
+<!-- Font -->
+<link href="https://fonts.googleapis.com/css?family=Libre+Baskerville" rel="stylesheet">
+
 <?php echo e(Html::style('css/styles.css')); ?>
 
 

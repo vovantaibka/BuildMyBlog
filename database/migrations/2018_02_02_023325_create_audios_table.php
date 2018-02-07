@@ -15,6 +15,7 @@ class CreateAudiosTable extends Migration
     {
         Schema::connection('mysql_2')->create('audios', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('title');
             $table->string('link')->unique();
             $table->text('introduce');
             $table->text('transcript')->nullable();

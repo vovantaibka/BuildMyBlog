@@ -34,8 +34,10 @@ Route::group(['middleware' => ['web']], function () {
 
     // Admin
     Route::get('admin/{object?}', ['uses' => 'AdminController@show', 'as' => 'admin.show']);
-    // Route::get('admin/blog/users', ['uses' => 'AdminController@getUsers', 'as' => 'admin.users']);
-    // Route::get('admin/blog/posts', ['uses' => 'AdminController@getPosts', 'as' => 'admin.posts']);
+
+    Route::get('admin/list/{object?}', 'Ajax\CRUDController@getListObject');
+    Route::get('admin/{object}/{id}', 'Ajax\CRUDController@viewObject');
+    Route::delete('admin/delete/{object}/{id}', 'Ajax\CRUDController@deleteObject');
 
     // Comments
     Route::post('comments/{post_id}', ['uses' => 'CommentsController@store', 'as' => 'comments.store']);
@@ -68,10 +70,6 @@ Route::group(['middleware' => ['web']], function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index');
-
-Route::get('admin/list/{object?}', 'Ajax\CRUDController@getListObject');
-Route::get('admin/{object}/{id}', 'Ajax\CRUDController@viewObject');
-Route::delete('admin/delete/{object}/{id}', 'Ajax\CRUDController@deleteObject');
 
 // Test 
 Route::get('test/map', 'Test\TestController@testGoogleMapApi');

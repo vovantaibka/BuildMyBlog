@@ -3,7 +3,6 @@
 @section('title', '| Contact')
 
 @section('content')
-    <link rel="stylesheet" href="{{ URL::asset('css/about-contact.css') }}"/>
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <h1>Contact Me</h1>

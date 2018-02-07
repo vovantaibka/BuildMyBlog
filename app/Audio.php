@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Audio extends Model
 {
+	protected $table = 'audios';
+
 	/**
 	 * The connection name for the model
 	 * 

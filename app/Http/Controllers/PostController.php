@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 
 //use App\Http\Controllers\Controller;
@@ -53,6 +54,7 @@ class PostController extends Controller
     public function store(Request $request)
     {
         if($request->action === "create") {
+
             // validate the data. Info https://laravel.com/docs/5.4/validation#available-validation-rules
             $this->validate($request, array(
                 'title' => 'required|max:255',
@@ -61,6 +63,8 @@ class PostController extends Controller
                 'body' => 'required'
             ));
 
+            $user = Auth::user();
+            
             // store in the database
             $post = new Post;
 
@@ -68,13 +72,15 @@ class PostController extends Controller
             $post->slug = $request->slug;
             $post->category_id = $request->category_id;
             $post->body = $request->body;
+            
+            $post->user_id = $user->id;
 
             // Save image
             if ($request->hasFile('featured_image')) {
                 $image = $request->file('featured_image');
                 $filename = time() . '.' . $image->getClientOriginalExtension();
                 $location = public_path('imgs/' . $filename);
-                Image::make($image)->widen(100)->save($location);
+                Image::make($image)->widen(362)->save($location);
 
                 $post->image = $filename;
             }
@@ -174,7 +180,7 @@ class PostController extends Controller
             $image = $request->file('featured_image');
             $filename = time() . '.' . $image->getClientOriginalExtension();
             $location = public_path('imgs/' . $filename);
-            Image::make($image)->widen(100)->save($location);
+            Image::make($image)->widen(362)->save($location);
             $oldFilename = $post->image;
             $post->image = $filename;
             Storage::delete($oldFilename);
