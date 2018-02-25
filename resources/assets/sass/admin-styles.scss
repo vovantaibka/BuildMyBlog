@@ -24,6 +24,10 @@ $color-svg-icon: #4691f6;
 	-webkit-box-sizing: border-box;
 }
 
+html, body {
+	height: 100%;
+}
+
 nav {
 	.profile-img img {
 		height: 60px;

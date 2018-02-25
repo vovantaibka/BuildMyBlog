@@ -15,7 +15,7 @@ use Session;
 use Image;
 use Storage;
 
-class CRUDController extends Controller
+class CRUD extends Controller
 {
 	public function __construct()
 	{
@@ -40,6 +40,10 @@ class CRUDController extends Controller
 
 			case 'tag':
 			$object = Tag::find($id);
+			break;
+
+			case 'category_audio':
+			$object = CategoryAudio::find($id);
 			break;
 
 			default:
@@ -88,6 +92,13 @@ class CRUDController extends Controller
 			]);
 			break;
 
+			case 'category_audio':
+			return response()->json([
+				'id' => $object->id,
+				'name' => $object->name
+			]);
+			break;
+
 			default:
 				# code...
 			break;
@@ -126,6 +137,11 @@ class CRUDController extends Controller
 
 			case 'vocabulary':
 			$view = view('admin.english.vocabulary');
+			break;
+
+			case 'category_audio':
+			$listObject = CategoryAudio::all();
+			$view = view('admin.english.categories')->withCategories($listObject);
 			break;
 
 			case 'audio':
@@ -167,6 +183,17 @@ class CRUDController extends Controller
 
 			case 'tag':
 			$object = Tag::find($id);
+			break;
+
+			case 'category_audio':
+			$object = CategoryAudio::find($id);
+
+			$audios = $object->audios()->where('category_id', $id)->get();
+
+			if ($audios->count()) {
+				Session::flash('error', 'Category can not delete');
+				return response()->json(['result' => 'error']);
+			}
 			break;
 
 			default:

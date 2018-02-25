@@ -14,6 +14,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 
 use App\Post;
 use App\Category;
+use App\CategoryAudio;
 use Mail;
 use Session;
 
@@ -74,10 +75,5 @@ class PagesController extends Controller
         Session::flash('success', 'Your Email was Send!');
 
         return redirect('/');
-    }
-
-    public function getListenAndRead() 
-    {
-        return view('pages.listenandread');
     }
 }

@@ -16,7 +16,7 @@
 					<th>#</th>
 					<th>Title</th>
 					<th>Image</th>
-					<th>Link</th>
+					{{-- <th>Link</th> --}}
 					<th>Introduce</th>
 					<th>Created At</th>
 					<th>Last Updated</th>
@@ -31,8 +31,8 @@
 					<td>
 						<img src="{{ asset('imgs/' . $audio->image) }}">
 					</td>
-					<td class="link">{{ substr($audio->link, 0, 40) . (strlen($audio->link) > 40 ? "..." : "") }}</td>
-					<td>{{ $audio->introduce }}</td>
+					{{-- <td class="link">{{ substr($audio->link, 0, 40) . (strlen($audio->link) > 40 ? "..." : "") }}</td> --}}
+					<td>{{ substr($audio->introduce, 0, 50) . (strlen($audio->introduce) > 50 ? "..." : "") }}</td>
 					<td>{{ date('M j, Y H:i', strtotime($audio->created_at)) }}</td>
 					<td>{{ date('M j, Y H:i', strtotime($audio->updated_at)) }}</td>
 					<td class="text-center">
@@ -143,7 +143,6 @@
 
 	<script type="text/javascript">
 		var formInstance = $('#form-audio').parsley();
-		console.log(formInstance.options);
 	</script>
 </main>
 

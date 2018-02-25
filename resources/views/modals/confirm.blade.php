@@ -11,7 +11,7 @@
 				<h5 id="content-modal-confirm"></h5>
 				<div class="text-center">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-					<button type="button" class="btn btn-primary" id="yes-modal-confirm">Yes</button>
+					<button type="button" class="btn btn-primary" id="yes-modal-confirm">Yes</button>	
 				</div>
 			</div>
 			{{-- <div class="modal-footer"></div> --}}

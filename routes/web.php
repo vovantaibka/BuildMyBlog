@@ -35,9 +35,9 @@ Route::group(['middleware' => ['web']], function () {
     // Admin
     Route::get('admin/{object?}', ['uses' => 'AdminController@show', 'as' => 'admin.show']);
 
-    Route::get('admin/list/{object?}', 'Ajax\CRUDController@getListObject');
-    Route::get('admin/{object}/{id}', 'Ajax\CRUDController@viewObject');
-    Route::delete('admin/delete/{object}/{id}', 'Ajax\CRUDController@deleteObject');
+    Route::get('admin/list/{object?}', 'Ajax\CRUD@getListObject');
+    Route::get('admin/{object}/{id}', 'Ajax\CRUD@viewObject');
+    Route::delete('admin/delete/{object}/{id}', 'Ajax\CRUD@deleteObject');
 
     // Comments
     Route::post('comments/{post_id}', ['uses' => 'CommentsController@store', 'as' => 'comments.store']);
@@ -60,10 +60,18 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('contact', 'PagesController@getContact');
     Route::post('contact', 'PagesController@postContact');
 
-    // English 
+    // English
+    Route::get('listenandread/category/{categoryId}', 'Ajax\Listen@getIndexWithCategory');
+
     Route::resource('audios', 'AudioController');
 
-    Route::get('/listenandread', 'PagesController@getListenAndRead');
+    Route::resource('categoriesaudio', 'CategoryAudioController');
+
+    Route::get('listenandread', ['as' => 'listenandread.index', 'uses' => 'EnglishController@getIndex']);
+
+    // Route::get('listenandread/category/{categoryId}', 'EnglishController@getIndexWithCategory');
+
+    Route::get('listenandread/{slug}', ['as' => 'english.single', 'uses' => 'EnglishController@getSingle']);
 });
 
 

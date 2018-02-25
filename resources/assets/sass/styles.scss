@@ -281,6 +281,121 @@ a:hover {
     }
 }
 
+/* Page Listen & Read */
+#listen-read {
+    padding: 44px 69px 100px 69px;
+    background-color: white;
+    color: black;
+    .nav-pills li {
+        font-size: 18px;
+        padding: 20px 15px 0 0;
+        a {
+            background-color: #499dc0;
+            color: #fff;
+            padding-bottom: 5px;
+            padding-top: 5px;
+            &:hover {
+                background-color: #367690;
+                color: #fff;
+            }
+        }
+        .active {
+            background-color: #e5e5e5;
+            color: #222;
+        }
+    }
+    .media-list {
+        padding-left: 0;
+        padding-right: 0;
+        .media {
+            color: #000;
+            margin: 0;
+            padding: 11px 15px;
+            .pull-left {
+                margin-right: 30px;
+                padding-right: 0px;
+                img {
+                    width: 106px;
+                    height: 81px;
+                    border: 3px solid #e5e5e5;
+                }
+            }
+            .media-body {
+                h3 {
+                    font-size: 18px;
+                }
+                time {
+                    color: #707070;
+                }
+                p {
+                    margin-bottom: 20px;
+                }
+            }
+        }
+    }
+}
+
+#media-single {
+    padding: 44px 69px 100px 69px;
+    background-color: white;
+    color: black;
+    .program {
+        header {
+            time {
+                color: #999;
+                margin-bottom: 0;
+            }
+        }
+        hr {
+            margin-top: 0;
+        }
+        div {
+            .program-image {
+                img {
+
+                    border: 5px solid #e5e5e5;
+                    margin: 0 auto;
+                }
+            }
+            #audio-player {
+                
+            }
+            .program-description {
+                margin-bottom: 10px;
+                .well {
+                    position: relative;
+                    p {
+                        color: #222;
+                        font-size: 18px;
+                        line-height: 1.75;
+                        margin-bottom: 0;
+                    }
+                }
+                .well-lg {
+                    border-width: 5px;
+                    border-radius: 0;
+                    box-shadow: none;
+                    padding: 15px 25px;
+                }
+            }
+            .program-buttons {
+                margin-left: -5px;
+                margin-right: -5px;
+                .btn-lg {
+                    font-size: 18px;
+                    margin-bottom: 10px;
+                    padding: 14px 16px;
+                }
+                .glyphicon {
+                    font-size: 20px;
+                    padding-right: 10px;
+                    vertical-align: bottom;
+                }
+            }
+        }
+    }
+}
+
 /* Page Info & Contact */
 #info-contact {
     min-height: 522px;
