@@ -5,4 +5,9 @@
         integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
         crossorigin="anonymous"></script>
 
-<script src="<?php echo e(asset('js/styleofme.js')); ?>"></script>
+<script>
+    $(function() {
+        $('#page-home').parent().removeClass("container");
+        $('#blog').addClass("container");
+    })
+</script>

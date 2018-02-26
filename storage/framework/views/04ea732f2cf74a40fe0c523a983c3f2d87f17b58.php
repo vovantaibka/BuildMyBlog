@@ -14,7 +14,9 @@
 <!-- Icons -->
 <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
 <script>
-	feather.replace()
+	feather.replace();
+	var baseUrl = '<?php echo e(url('/admin')); ?>';
+	var apiUrl = '<?php echo e(url('/api/admin')); ?>';
 </script>
 
 <!-- Graphs -->

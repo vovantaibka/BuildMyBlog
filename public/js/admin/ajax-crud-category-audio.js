@@ -1,6 +1,6 @@
 $(function() {
 	var currentObject = $("input#current-object").val();
-	var deleteUrl = "http://127.0.0.1:8000/admin/delete";
+	var deleteUrl = apiUrl + "/delete";
 	var objectId = null;
 
 	$.ajaxSetup({
@@ -29,9 +29,7 @@ $(function() {
 	$("button.edit").click(function() {
 		objectId = getIdObject(this);
 
-		var viewUrl = "http://127.0.0.1:8000/admin";
-
-		$.get(viewUrl + '/' + currentObject + "/" + objectId).done(function(response) {
+		$.get(apiUrl + '/' + currentObject + "/" + objectId).done(function(response) {
 			// Set action form
 			modalCreateAndEdit.find("input[name=action]").val("edit");
 
@@ -80,7 +78,7 @@ $(function() {
 	}
 
 	function loadData(object) {
-		var url = "http://127.0.0.1:8000/admin/list";
+		var url = apiUrl + "/list";
 		$.get(url + '/' + object).done(function(response) {
 			$("main").replaceWith(response.data);
 		});

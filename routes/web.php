@@ -11,7 +11,13 @@
 |
 */
 
-//
+Route::get('/', 'PagesController@getIndex');
+Route::get('/home', 'HomeController@index');
+
+Route::get('test/map', 'Test\TestController@testGoogleMapApi');
+Route::get('test/zoom-image', 'Test\TestController@testZoomImage');
+Route::get('test/jquery', 'Test\TestController@testJQuery');
+
 Route::group(['middleware' => ['web']], function () {
 
     // Authentication Routes
@@ -35,10 +41,6 @@ Route::group(['middleware' => ['web']], function () {
     // Admin
     Route::get('admin/{object?}', ['uses' => 'AdminController@show', 'as' => 'admin.show']);
 
-    Route::get('admin/list/{object?}', 'Ajax\CRUD@getListObject');
-    Route::get('admin/{object}/{id}', 'Ajax\CRUD@viewObject');
-    Route::delete('admin/delete/{object}/{id}', 'Ajax\CRUD@deleteObject');
-
     // Comments
     Route::post('comments/{post_id}', ['uses' => 'CommentsController@store', 'as' => 'comments.store']);
     Route::get('comments/{id}/edit', ['uses' => 'CommentsController@edit', 'as' => 'comments.edit']);
@@ -53,7 +55,6 @@ Route::group(['middleware' => ['web']], function () {
 
     Route::get('blog', ['as' => 'blog.index', 'uses' => 'BlogController@getIndex']);
 
-    Route::get('/', 'PagesController@getIndex');
     Route::get('about', 'PagesController@getAbout');
 
     // Contact
@@ -61,25 +62,21 @@ Route::group(['middleware' => ['web']], function () {
     Route::post('contact', 'PagesController@postContact');
 
     // English
-    Route::get('listenandread/category/{categoryId}', 'Ajax\Listen@getIndexWithCategory');
-
     Route::resource('audios', 'AudioController');
 
     Route::resource('categoriesaudio', 'CategoryAudioController');
 
     Route::get('listenandread', ['as' => 'listenandread.index', 'uses' => 'EnglishController@getIndex']);
 
-    // Route::get('listenandread/category/{categoryId}', 'EnglishController@getIndexWithCategory');
-
     Route::get('listenandread/{slug}', ['as' => 'english.single', 'uses' => 'EnglishController@getSingle']);
 });
 
+Route::group(['prefix' => 'api', 'namespace' => 'Api'], function () {
+    Route::get('admin/list/{object?}', 'AdminController@getListObject');
+    Route::get('admin/{object}/{id}', 'AdminController@viewObject');
+    Route::delete('admin/delete/{object}/{id}', 'AdminController@deleteObject');
+
+    Route::get('admin/listenandread/category/{categoryId}', 'EnglishController@getIndexWithCategory');
+});
 
 Auth::routes();
-
-Route::get('/home', 'HomeController@index');
-
-// Test 
-Route::get('test/map', 'Test\TestController@testGoogleMapApi');
-Route::get('test/zoom-image', 'Test\TestController@testZoomImage');
-Route::get('test/jquery', 'Test\TestController@testJQuery');

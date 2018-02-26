@@ -5,7 +5,7 @@ $(function() {
 
 		var categoryId = $(this).find("input[type=hidden]").val();
 
-		var indexCategoryUrl = "http://127.0.0.1:8000/listenandread/category";
+		var indexCategoryUrl = apiUrl + "/listenandread/category";
 
 		$.get(indexCategoryUrl + '/' + categoryId).done(function(response) {
 			$("ul.media-list").replaceWith(response.data);
