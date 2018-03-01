@@ -73,7 +73,7 @@
 		</div>	
 	</div>
 
-	<script src="{{asset('js/admin/ajax-crud-tag.js')}}"></script>
+	<script src="{{asset('js/admin/crud-tag.js')}}"></script>
 </main>
 
 

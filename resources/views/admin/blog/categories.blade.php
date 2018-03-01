@@ -75,7 +75,7 @@
 		</div>	
 	</div>
 
-	<script src="{{asset('js/admin/ajax-crud-category.js')}}"></script>
+	<script src="{{asset('js/admin/crud-category.js')}}"></script>
 </main>
 
 

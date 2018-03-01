@@ -6,11 +6,9 @@
 <div id="welcome">
     <link rel="stylesheet" href="{{ URL::asset('css/freestyle.css') }}"/>
     <div class="row" id="introduce">
-        <div class="col-md-12">
-            <div class="welcome-blog">
-                <img src="{{ asset('imgs/man-sitting-near-large-body-of-water-under-clear-sky-during-sunset-164293.jpeg') }}" class="img-responsive img-thumbnail"
+        <div class="welcome-blog">
+            <img src="{{ asset('imgs/man-sitting-near-large-body-of-water-under-clear-sky-during-sunset-164293.jpeg') }}" class="img-responsive img-thumbnail"
                 alt="Welcome image">
-            </div>
         </div>
     </div> <!-- end of header .row -->
 

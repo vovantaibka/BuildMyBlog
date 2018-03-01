@@ -153,7 +153,7 @@
 			</div>
 		</div>	
 	</div>
-	<script src="<?php echo e(asset('js/admin/ajax-crud-post.js')); ?>"></script>
+	<script src="<?php echo e(asset('js/admin/crud-post.js')); ?>"></script>
 
 	<script type="text/javascript">
 		$(function() {

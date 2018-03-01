@@ -140,7 +140,7 @@
 			</div>
 		</div>	
 	</div>
-	<script src="{{asset('js/admin/ajax-crud-post.js')}}"></script>
+	<script src="{{asset('js/admin/crud-post.js')}}"></script>
 
 	<script type="text/javascript">
 		$(function() {

@@ -75,7 +75,7 @@
 		</div>	
 	</div>
 
-	<script src="{{asset('js/admin/ajax-crud-category-audio.js')}}"></script>
+	<script src="{{asset('js/admin/crud-category-audio.js')}}"></script>
 
 	<script type="text/javascript">
 		var formInstance = $('#form-audio').parsley();

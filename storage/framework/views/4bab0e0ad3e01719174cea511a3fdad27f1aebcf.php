@@ -6,6 +6,7 @@
         crossorigin="anonymous"></script>
 
 <script>
+    var apiUrl = '<?php echo e(url('/api/admin')); ?>';
     $(function() {
         $('#page-home').parent().removeClass("container");
         $('#blog').addClass("container");

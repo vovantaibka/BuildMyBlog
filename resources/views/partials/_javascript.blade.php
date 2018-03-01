@@ -6,6 +6,7 @@
         crossorigin="anonymous"></script>
 
 <script>
+    var apiUrl = '{{ url('/api/admin') }}';
     $(function() {
         $('#page-home').parent().removeClass("container");
         $('#blog').addClass("container");

@@ -21,4 +21,4 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
 
 <!-- Load the data when changing the object management -->
-<script src="{{asset('js/admin/ajax-load-data.js')}}"></script>
+<script src="{{asset('js/admin/load-data.js')}}"></script>
