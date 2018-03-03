@@ -69,6 +69,9 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('listenandread', ['as' => 'listenandread.index', 'uses' => 'EnglishController@getIndex']);
 
     Route::get('listenandread/{slug}', ['as' => 'english.single', 'uses' => 'EnglishController@getSingle']);
+
+    //Website Crawler
+    Route::post('crawlersite', 'CrawlerController@getUrlData');
 });
 
 Route::group(['prefix' => 'api', 'namespace' => 'Api'], function () {

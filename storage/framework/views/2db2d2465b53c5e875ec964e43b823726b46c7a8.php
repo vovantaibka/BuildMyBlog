@@ -34,9 +34,9 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                 aria-expanded="false">Hello <?php echo e(Auth::user()->name); ?><span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                    <li><a href="<?php echo e(route('tags.index')); ?>">Tags</a></li>
-                    <li><a href="<?php echo e(route('posts.index')); ?>">Posts</a></li>
-                    <li><a href="<?php echo e(route('categories.index')); ?>">Categories</a></li>
+                    
+                    
+                    
                     <li><a href="<?php echo e(route('admin.show', 'home')); ?>">Management</a></li>
                     <li role="separator" class="divider"></li>
                     <li><a href="<?php echo e(route('account.edit', Auth::user()->id)); ?>">Account Info</a></li>
