@@ -14,9 +14,12 @@
 Route::get('/', 'PagesController@getIndex');
 Route::get('/home', 'HomeController@index');
 
-Route::get('test/map', 'Test\TestController@testGoogleMapApi');
-Route::get('test/zoom-image', 'Test\TestController@testZoomImage');
-Route::get('test/jquery', 'Test\TestController@testJQuery');
+Route::group(['namespace' => 'Test'], function () {
+    Route::get('test/map', 'TestController@testGoogleMapApi');
+    Route::get('test/zoom-image', 'TestController@testZoomImage');
+    Route::get('test/jquery', 'TestController@testJQuery');
+    Route::get('test/pagerank', 'TestController@getPagerank');
+});
 
 Route::group(['middleware' => ['web']], function () {
 

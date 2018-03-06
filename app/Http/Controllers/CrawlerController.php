@@ -4,84 +4,121 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-
-require 'simple_html_dom.php';
+use Goutte\Client;
+use GuzzleHttp\Client as GuzzleClient;
+use Storage;
 
 class CrawlerController extends Controller
 {
-    public $crawled_urls = array();
-    public $found_urls = array();
+    const CountNode = 1000; // Tổng số nút sẽ duyệt qua
+    const BaseUrlWiki = "https://vi.wikipedia.org";
 
-    function rel2abs($rel, $base)
+    private $goutteClient;
+    private $guzzleClient;
+    private $f;
+
+    public $crawledUrls = array(); // Chứa Info của tất cả những trang đã crawler
+    public $linkedPages = array(); // Chứa tất cả hyperlink wiki vn của trang hiện tại
+    public $urls = array(); // Chứa tất cả những url đã tìm ra
+    public $url;
+
+    public function __construct()
     {
-        if (parse_url($rel, PHP_URL_SCHEME) != '') return $rel;
-        if ($rel[0] == '#' || $rel[0] == '?') {
-            return $base . $rel;
-        }
-        extract(parse_url($base));
-        $path = preg_replace('#/[^/]*$#', '', $path);
-        if ($rel[0] == '/') $path = '';
-        $abs = "$host$path/$rel";
-        $re = array('#(/\.?/)#', '#/(?!\.\.)[^/]+/\.\./#');
-        for ($n = 1; $n > 0; $abs = preg_replace($re, '/', $abs, -1, $n)) {
-        }
-        $abs = str_replace("../", "", $abs);
-        return $scheme . '://' . $abs;
+        $this->goutteClient = new Client();
+        $this->guzzleClient = new GuzzleClient(array(
+            'timeout' => 60,
+        ));
+        $this->goutteClient->setClient($this->guzzleClient);
     }
 
-    function perfectUrl($u, $b)
+    // Hàm lấy ra tất cả hyperlinks từ url đưa vào
+    public function getUrlsWiki($url)
     {
-        $bp = parse_url($b);
-        if (($bp['path'] != "/" && $bp['path'] != "") || $bp['path'] == '') {
-            if ($bp['scheme'] == "") {
-                $scheme = "http";
-            } else {
-                $scheme = $bp['scheme'];
-            }
-//            $b = $scheme . "://" . $bp['hw_objrec2array(object_record)st'] . "/";
-        }
-        if (substr($u, 0, 2) == "//") {
-            $u = "http:" . $u;
-        }
-        if (substr($u, 0, 4) != "http") {
-            if(isset($u) && !empty($u)) {
-                $u = $this->rel2abs($u, $b);
-            }
-        }
-        return $u;
-    }
+        $crawler = $this->goutteClient->request('GET', $url);
 
-    public function crawlerUrlSite($u)
-    {
-        $urls = array();
-        $uen = urlencode($u);
-        if ((array_key_exists($uen, $this->crawled_urls) == 0 || $this->crawled_urls[$uen] < date("YmdHis", strtotime('-25 seconds', time())))) {
-            $html = HtmlDomParser::file_get_html($u);
-            $this->crawled_urls[$uen] = date("YmdHis");
-            foreach ($html->find("a") as $li) {
-                $url = $this->perfectUrl($li->href, $u);
-                $enurl = urlencode($url);
-                if ($url != '' && substr($url, 0, 4) != "mail" && substr($url, 0, 4) != "java" && array_key_exists($enurl, $this->found_urls) == 0) {
-                    $this->found_urls[$enurl] = 1;
-                    array_push($urls, $url);
-                }
+        $this->linkedPages = array();
+        $this->url = $url;
+
+        try {
+            if($crawler->filter('div#bodyContent')->filter('a')->count() > 0) {
+                $crawler->filter('div#bodyContent')->filter('a')->each(function ($node) {
+                    $link = $node->selectlink($node->text())->link();
+                    $linkUrl = $link->getUri();
+                    if(!strpos($linkUrl, "#")) {
+                        if (strpos($linkUrl, self::BaseUrlWiki) === 0) {
+                            if (!in_array($linkUrl, $this->linkedPages)) {
+                                $this->linkedPages[] = $linkUrl;
+                                fputcsv($this->f, [$this->url, $linkUrl]);
+                            }
+                        }
+                        if(!in_array($linkUrl, $this->urls)) {
+                            $this->urls[] = $linkUrl;
+                        }
+                    }
+                });
             }
+        } catch (\InvalidArgumentException $e) {
+            //
         }
-        return $urls;
+
     }
 
     public function getUrlData(Request $request)
     {
-        $urls = array();
-        $url = $request->url;
-        if ($url == '') {
-            $urls = null;
-        } else {
-            $f = fopen("url-crawled.html", "a+");
-            fwrite($f, "<div><a href='$url'>$url</a> - " . date("Y-m-d H:i:s") . "</div>");
-            fclose($f);
-            $urls = $this->crawlerUrlSite($url);
+        $startUrl = $request->url;
+        $crawler = $this->goutteClient->request('GET', $startUrl);
+
+        $title = $crawler->filter('h1#firstHeading')->html();
+
+        $crawlerStartUrl = array(
+            'title' => $title,
+            'impactFactor' => 1
+        );
+
+        $this->crawledUrls[$startUrl] = $crawlerStartUrl;
+
+        $this->f = fopen("url-crawled.csv","a+");
+        fputcsv($this->f, ["linkFrom", "linkTo"]);
+
+        $this->getUrlsWiki($startUrl);
+
+        for ($i = 0; $i < 10; $i++) {
+            $nextUrl = $this->linkedPages[array_rand($this->linkedPages)];
+
+            while ((empty($nextUrl)) && (!array_key_exists($nextUrl, $this->crawledUrls))) {
+                $nextUrl = $this->linkedPages[array_rand($this->linkedPages)];
+            }
+
+            $crawler = $this->goutteClient->request('GET', $nextUrl);
+
+            $pageTitle = $crawler->filter('h1#firstHeading')->html();
+
+            if (array_key_exists($nextUrl, $this->crawledUrls)) {
+                $this->crawledUrls[$nextUrl]['impactFactor']++;
+            } else {
+                $crawlerUrl = array(
+                    'title' => $pageTitle,
+                    'impactFactor' => 1
+                );
+                $this->crawledUrls[$nextUrl] = $crawlerUrl;
+            }
+
+            $this->getUrlsWiki($nextUrl);
         }
-        return redirect()->route('admin.show', 'crawler');
+
+        fclose($this->f);
+//        $f=fopen("url-crawled.txt","a+");
+//        fwrite($f, "linkFrom, linkTo");
+//        foreach ($this->crawledUrls as $url => $crawledUrl) {
+//            fwrite($f, $crawledUrl['title'] . "\n");
+//            fwrite($f, $url . "\n");
+//            fwrite($f, $crawledUrl['impactFactor'] . "\n");
+//            fwrite($f, "\n\n");
+//        }
+//        fwrite($f, "Start Url: " . $startUrl . "\n");
+//        fwrite($f, "Tổng số url đã crawler: " . count($this->crawledUrls) . "\n");
+//        fwrite($f, "Tổng số url đã tìm ra: " . count($this->urls) . "\n");
+//        fclose($f);
+        return view('admin.crawler.tool');
     }
 }
