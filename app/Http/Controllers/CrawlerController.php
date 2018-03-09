@@ -65,7 +65,7 @@ class CrawlerController extends Controller
 
     public function getUrlData(Request $request)
     {
-        $startUrl = $request->url;
+        $startUrl = $request->entrypoint;
         $crawler = $this->goutteClient->request('GET', $startUrl);
 
         $title = $crawler->filter('h1#firstHeading')->html();

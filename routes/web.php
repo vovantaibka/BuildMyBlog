@@ -19,6 +19,7 @@ Route::group(['namespace' => 'Test'], function () {
     Route::get('test/zoom-image', 'TestController@testZoomImage');
     Route::get('test/jquery', 'TestController@testJQuery');
     Route::get('test/pagerank', 'TestController@getPagerank');
+    Route::get('test/vue', 'TestController@getVueComponent');
 });
 
 Route::group(['middleware' => ['web']], function () {

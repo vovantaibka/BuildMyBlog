@@ -18,37 +18,32 @@ $color-svg-icon: #4691f6;
 	stroke-width: 1;
 }
 
+@mixin full-page {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+}
+
 * {
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 }
 
-html, body {
-	height: 100%;
+html {
+	@include full-page;
 }
 
-nav {
-	.profile-img img {
-		height: 60px;
-		width: 60px;
-		padding: 8px;
-		margin-left: 8px;
-		border-radius:50%;
-		-moz-border-radius:50%;
-		-webkit-border-radius:50%;
+body {
+	@include full-page;
+}
+
+#wrapper {
+	position: relative;
+	min-height: calc(100% - 60px);
+	.container-fluid {
+		height: 100%;
 	}
-	a {
-
-	}
-}
-
-.nav-select {
-	background: #DDDDDD!important;
-}
-
-.sidebar .svg-icon {
-	@include svg-icon-size(24px,24px);
 }
 
 .sidebar {
@@ -58,44 +53,11 @@ nav {
 			&:hover {
 				background: #eef2d6!important;
 			}
-			.submenu {
-				position: absolute;
-				display: none;
-				background: #DDDDDD	;
-				top: 0px;
-				left: 218px;
-				z-index: 100;
-				width: 223px;
-				padding: 0px 15px;
-				.submenu-title {
-					color: #4d4c47;
-					display: inline-block;
-					font-size: 1.7rem;
-					font-weight: 600;
-					margin: 10px 20px;
-				}
-				.close-submenu {
-					.svg-icon {
-						@include svg-icon-size(24px,24px);
-						path {
-							fill: #6c757d;
-						}
-						&:hover {
-							path {
-								fill: #4d4c47;
-							}
-						}
-					}
-				}
-				.nav-item {
-					&:hover {
-						background: #aaaaaa!important;
-					}
-				}
-			}
 		}
 	}
-
+	.svg-icon {
+		@include svg-icon-size(24px,24px);
+	}
 }
 
 .button-create-new {
@@ -160,12 +122,77 @@ nav {
 
 // Website Crawler
 #crawler-tool {
-	.content {
-		margin-top:10px;height:100%;
+	.card {
+		.card-block {
+			padding: 20px;
+		}
 	}
 }
 
 .modal-body {
 	padding-left: 50px;
 	padding-right: 50px;
+}
+
+nav {
+	.profile-img img {
+		height: 60px;
+		width: 60px;
+		padding: 8px;
+		margin-left: 8px;
+		border-radius:50%;
+		-moz-border-radius:50%;
+		-webkit-border-radius:50%;
+	}
+	a {
+
+	}
+}
+
+.nav-select {
+	background: #DDDDDD!important;
+}
+
+.submenu {
+	display: none;
+	position: absolute;
+	top: 0px;
+	left: 218px;
+	z-index: 100;
+	width: 223px;
+	padding: 0px 15px;
+	background: #DDDDDD	;
+	.wrapper {
+		position: relative;
+		.title {
+			color: #4d4c47;
+			display: inline-block;
+			font-size: 1.7rem;
+			font-weight: 600;
+			margin: 10px 20px;
+		}
+		.btn-close {
+			position: absolute;
+			right: 5px;
+			top: 20px;
+			.svg-icon {
+				@include svg-icon-size(24px,24px);
+				path {
+					fill: #6c757d;
+				}
+				&:hover {
+					path {
+						fill: #4d4c47;
+					}
+				}
+			}
+		}
+		.nav {
+			.nav-item {
+				&:hover {
+					background: #aaaaaa!important;
+				}
+			}
+		}
+	}
 }

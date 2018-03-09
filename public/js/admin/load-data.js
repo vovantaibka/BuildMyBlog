@@ -3,11 +3,12 @@ $(function() {
 	var previousNavItem = $("#admin-page");
 
 	var currentSubMenu;
+	var previousSubMenu;
 
 	var currentObject = $("input#object").val();
-	var object = currentObject;
+	var obj = currentObject;
 
-	loadData(object);
+	loadData(obj);
 
 	$("[id=management]").on('click', function() {
 		$("#mceu_28").hide();
@@ -31,6 +32,10 @@ $(function() {
 			currentObject = $(this).children().first().val();
 			loadData(currentObject);
 		} else {
+			if(previousSubMenu) {
+				previousSubMenu.hide();
+			}
+
 			currentSubMenu = subMenu;
 
 			var height = $('nav.sidebar').height();
@@ -40,16 +45,18 @@ $(function() {
 			subMenu.css('width', width + 40);
 
 			subMenu.show();
+
+			previousSubMenu = currentSubMenu;
 		}
 	});
 
-	$('a.close-submenu').on('click', function() {
+	$('a.btn-close').on('click', function() {
 		currentSubMenu.hide();
 	})
 
-	function loadData(object) {
+	function loadData(obj) {
 		var url = apiUrl + "/list";
-		$.get(url + '/' + object).done(function(response) {
+		$.get(url + '/' + obj).done(function(response) {
 			$("main").replaceWith(response.data);
 		});
 	}

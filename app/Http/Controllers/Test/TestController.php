@@ -52,15 +52,9 @@ class TestController extends Controller
 
         // print the result
         $formatter = new ResultFormatter(4);
-        var_dump($formatter->toString($result));
+        var_dump($formatter->toString($result));}
 
-//        $history = $result->getHistory();
-//
-//        foreach ($history as $h) {
-//            echo "Round " . $h->getId() ."\n";
-//            foreach($h->getEntries() as $entry){
-//                echo "Node " . $entry->getNode()->getName() . " had an old PageRank (before the calculation in this iteration) of " . $entry->getOldPr() . " and " . $entry->getNewPr() . "afterwards.\n";
-//            }
-//        }
+    public function getVueComponent() {
+        return view('test.vue');
     }
 }
