@@ -98,7 +98,7 @@ class PostController extends Controller
         } else {
             $this->update($request, $request->post_id);            
         }
-        return redirect()->route('admin.show', 'post'); 
+        return redirect()->route('admin.main', 'post'); 
     }
 
     /**

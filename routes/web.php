@@ -43,7 +43,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::put('account/{id}', ['uses' => 'AccountController@changePassword', 'as' => 'account.changepw']);
 
     // Admin
-    Route::get('admin/{object?}', ['uses' => 'AdminController@show', 'as' => 'admin.show']);
+    Route::get('admin', ['uses' => 'AdminController@showHome', 'as' => 'admin.main']);
 
     // Comments
     Route::post('comments/{post_id}', ['uses' => 'CommentsController@store', 'as' => 'comments.store']);
@@ -74,8 +74,9 @@ Route::group(['middleware' => ['web']], function () {
 
     Route::get('listenandread/{slug}', ['as' => 'english.single', 'uses' => 'EnglishController@getSingle']);
 
-    //Website Crawler
-    Route::post('crawlersite', 'CrawlerController@getUrlData');
+    Route::get('/vue/{vue_capture?}', function () {
+        return view('vue.index');
+    })->where('vue_capture', '[\/\w\.-]*');
 });
 
 Route::group(['prefix' => 'api', 'namespace' => 'Api'], function () {
@@ -84,6 +85,9 @@ Route::group(['prefix' => 'api', 'namespace' => 'Api'], function () {
     Route::delete('admin/delete/{object}/{id}', 'AdminController@deleteObject');
 
     Route::get('admin/listenandread/category/{categoryId}', 'EnglishController@getIndexWithCategory');
+
+    //Website Crawler
+    Route::post('crawlersite', 'CrawlerController@getUrlData');
 });
 
 Auth::routes();

@@ -3,7 +3,7 @@
         <h1>Web Crawler</h1>
         <form action="{{ url('crawlersite') }}" method="POST">
             {{ csrf_field() }}
-            URL : <input name="url" size="35" placeholder="http://www.subinsb.com"/>
+            URL : <input name="entrypoint" size="35" placeholder="http://www.subinsb.com"/>
             <input type="submit" name="submit" value="Start Crawling"/>
         </form>
         <br/>

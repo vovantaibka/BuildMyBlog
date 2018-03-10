@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use GuzzleHttp\Exception\ConnectException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Goutte\Client;
@@ -40,19 +41,19 @@ class CrawlerController extends Controller
         $this->url = $url;
 
         try {
-            if($crawler->filter('div#bodyContent')->filter('a')->count() > 0) {
+            if ($crawler->filter('div#bodyContent')->filter('a')->count() > 0) {
                 $crawler->filter('div#bodyContent')->filter('a')->each(function ($node) {
                     $link = $node->selectlink($node->text())->link();
                     $linkUrl = $link->getUri();
-                    if(!strpos($linkUrl, "#")) {
+                    if (!strpos($linkUrl, "#")) {
                         if (strpos($linkUrl, self::BaseUrlWiki) === 0) {
                             if (!in_array($linkUrl, $this->linkedPages)) {
                                 $this->linkedPages[] = $linkUrl;
                                 fputcsv($this->f, [$this->url, $linkUrl]);
                             }
-                        }
-                        if(!in_array($linkUrl, $this->urls)) {
-                            $this->urls[] = $linkUrl;
+                            if (!in_array($linkUrl, $this->urls)) {
+                                $this->urls[] = $linkUrl;
+                            }
                         }
                     }
                 });
@@ -60,7 +61,33 @@ class CrawlerController extends Controller
         } catch (\InvalidArgumentException $e) {
             //
         }
+    }
 
+    public function getUrlsWikiLinked($url)
+    {
+        $crawler = $this->goutteClient->request('GET', $url);
+
+        $this->linkedPages = array();
+        $this->url = $url;
+
+        try {
+            if ($crawler->filter('div#bodyContent')->filter('a')->count() > 0) {
+                $crawler->filter('div#bodyContent')->filter('a')->each(function ($node) {
+                    $link = $node->selectlink($node->text())->link();
+                    $linkUrl = $link->getUri();
+                    if (!strpos($linkUrl, "#")) {
+                        if (strpos($linkUrl, self::BaseUrlWiki) === 0) {
+                            if (!in_array($linkUrl, $this->linkedPages) && (in_array($linkUrl, $this->urls))) {
+                                $this->linkedPages[] = $linkUrl;
+                                fputcsv($this->f, [$this->url, $linkUrl]);
+                            }
+                        }
+                    }
+                });
+            }
+        } catch (\InvalidArgumentException $e) {
+            //
+        }
     }
 
     public function getUrlData(Request $request)
@@ -77,12 +104,12 @@ class CrawlerController extends Controller
 
         $this->crawledUrls[$startUrl] = $crawlerStartUrl;
 
-        $this->f = fopen("url-crawled.csv","a+");
+        $this->f = fopen("url-crawled.csv", "a+");
         fputcsv($this->f, ["linkFrom", "linkTo"]);
 
         $this->getUrlsWiki($startUrl);
 
-        for ($i = 0; $i < 10; $i++) {
+        while (count($this->urls) < self::CountNode) {
             $nextUrl = $this->linkedPages[array_rand($this->linkedPages)];
 
             while ((empty($nextUrl)) && (!array_key_exists($nextUrl, $this->crawledUrls))) {
@@ -106,19 +133,15 @@ class CrawlerController extends Controller
             $this->getUrlsWiki($nextUrl);
         }
 
+        $AllUrls = $this->urls;
+
+        foreach ($AllUrls as $url) {
+            if (!array_key_exists($url, $this->crawledUrls)) {
+                $this->getUrlsWikiLinked($url);
+            }
+        }
+
         fclose($this->f);
-//        $f=fopen("url-crawled.txt","a+");
-//        fwrite($f, "linkFrom, linkTo");
-//        foreach ($this->crawledUrls as $url => $crawledUrl) {
-//            fwrite($f, $crawledUrl['title'] . "\n");
-//            fwrite($f, $url . "\n");
-//            fwrite($f, $crawledUrl['impactFactor'] . "\n");
-//            fwrite($f, "\n\n");
-//        }
-//        fwrite($f, "Start Url: " . $startUrl . "\n");
-//        fwrite($f, "Tổng số url đã crawler: " . count($this->crawledUrls) . "\n");
-//        fwrite($f, "Tổng số url đã tìm ra: " . count($this->urls) . "\n");
-//        fclose($f);
         return view('admin.crawler.tool');
     }
 }

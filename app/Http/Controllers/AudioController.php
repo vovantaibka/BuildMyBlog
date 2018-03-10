@@ -61,7 +61,7 @@ class AudioController extends Controller
         } else {
 
         }
-        return redirect()->route('admin.show', 'audio');
+        return redirect()->route('admin.main', 'audio');
     }
 
     /**

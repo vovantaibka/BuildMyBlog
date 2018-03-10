@@ -37,7 +37,7 @@
                     
                     
                     
-                    <li><a href="<?php echo e(route('admin.show', 'home')); ?>">Management</a></li>
+                    <li><a href="<?php echo e(route('admin.main')); ?>">Management</a></li>
                     <li role="separator" class="divider"></li>
                     <li><a href="<?php echo e(route('account.edit', Auth::user()->id)); ?>">Account Info</a></li>
                     <li>

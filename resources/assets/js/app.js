@@ -14,12 +14,8 @@ require('./bootstrap');
  */
 
 Vue.component('example', require('./components/Example.vue'));
-Vue.component('vuecomponent', require('./components/VueComponent.vue'));
 
 const app = new Vue({
-    el: '#app',
-    data: {
-    	title: 'title thẻ span!',
-    	message: 'message thẻ span!'
-    }
+    el: '#app'
 });
+

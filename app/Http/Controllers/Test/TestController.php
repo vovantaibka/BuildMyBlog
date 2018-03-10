@@ -35,7 +35,7 @@ class TestController extends Controller
         $destinationColumn = "linkTo";
         $encoding = "utf-8";
         $delimiter = ",";
-        $csvImporter = new CsvImporter($hasHeader,$sourceColumn,$destinationColumn,$encoding,$delimiter);
+        $csvImporter = new CsvImporter($hasHeader, $sourceColumn, $destinationColumn, $encoding, $delimiter);
         $pathToFile = public_path() . "/url-crawled.csv";
 
         $graph = $csvImporter->import($pathToFile);
@@ -44,7 +44,7 @@ class TestController extends Controller
         $maxRounds = null;
         $maxDistance = null;
         $collapseLinks = null;
-        $pageRank = new PageRank($dampingFactor,$maxRounds,$maxDistance,$collapseLinks);
+        $pageRank = new PageRank($dampingFactor, $maxRounds, $maxDistance, $collapseLinks);
 
         // calculate the PageRank
         $keepAllRoundData = null;
@@ -52,9 +52,11 @@ class TestController extends Controller
 
         // print the result
         $formatter = new ResultFormatter(4);
-        var_dump($formatter->toString($result));}
+        var_dump($formatter->toString($result));
+    }
 
-    public function getVueComponent() {
+    public function getVueComponent()
+    {
         return view('test.vue');
     }
 }

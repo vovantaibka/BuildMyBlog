@@ -15,9 +15,9 @@ class AdminController extends AccountController
 		$this->middleware('auth');
 	}
 
-	public function show($object) 
+	public function showHome() 
 	{
 		$user = Auth::user();
-		return view('admin.show')->withUser($user)->withObject($object);
+		return view('admin.main')->withUser($user);
 	}
 }

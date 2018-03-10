@@ -57,7 +57,7 @@ class TagController extends Controller
         } else {
             $this->update($request, $request->tag_id);      
         }
-        return redirect()->route('admin.show', 'tag'); 
+        return redirect()->route('admin.main', 'tag'); 
     }
 
     /**

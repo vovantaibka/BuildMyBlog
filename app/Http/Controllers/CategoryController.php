@@ -68,7 +68,7 @@ class CategoryController extends Controller
         } else {
             $this->update($request, $request->category_id);  
         }
-        return redirect()->route('admin.show', 'category');
+        return redirect()->route('admin.main', 'category');
     }
 
     /**

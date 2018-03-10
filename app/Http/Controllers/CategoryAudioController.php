@@ -51,7 +51,7 @@ class CategoryAudioController extends Controller
         } else {
             $this->update($request, $request->category_id);  
         }
-        return redirect()->route('admin.show', 'category_audio');
+        return redirect()->route('admin.main', 'category_audio');
     }
 
     /**
