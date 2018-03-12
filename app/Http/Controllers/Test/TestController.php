@@ -36,7 +36,7 @@ class TestController extends Controller
         $encoding = "utf-8";
         $delimiter = ",";
         $csvImporter = new CsvImporter($hasHeader, $sourceColumn, $destinationColumn, $encoding, $delimiter);
-        $pathToFile = public_path() . "/url-crawled.csv";
+        $pathToFile = public_path() . "/url-crawled-v4.csv";
 
         $graph = $csvImporter->import($pathToFile);
 
@@ -52,7 +52,8 @@ class TestController extends Controller
 
         // print the result
         $formatter = new ResultFormatter(4);
-        var_dump($formatter->toString($result));
+
+        var_dump($formatter->toArrayFormatter($result));
     }
 
     public function getVueComponent()
