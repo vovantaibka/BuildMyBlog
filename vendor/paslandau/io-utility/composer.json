@@ -1,0 +1,29 @@
+{
+    "name": "paslandau/io-utility",
+    "license": "MIT",
+    "description" : "IO library for file operations - mostly for convenience on commmon actions",
+    "authors": [
+        {
+            "name": "Pascal Landau",
+            "email": "kontakt@myseosolution.de",
+            "homepage": "http://www.myseosolution.de",
+            "role": "Developer"
+        }
+    ],
+	"autoload": {
+	    "psr-4": {
+	        "paslandau\\IOUtility\\": "src/"
+	    }
+	},
+    "repositories": [ { "type": "composer", "url": "http://packages.myseosolution.de/"} ],
+    "minimum-stability": "dev",
+    "require" : {
+        "php": ">=5.5",
+      "ext-mbstring": "*",
+      "league/csv": "^7.1.1"
+    },
+    "require-dev" : {
+        "phpunit/phpunit": "~4",
+        "paslandau/array-utility": "dev-master"
+    }
+}
