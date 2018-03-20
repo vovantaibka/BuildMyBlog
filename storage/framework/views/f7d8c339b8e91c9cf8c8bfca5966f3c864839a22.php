@@ -4,12 +4,14 @@
 
 <?php $__env->startSection('content'); ?>
     <div id="blog-single">
-        <div class="row">
-            <div class="col-md-12">
-                <h1><?php echo e($post->title); ?></h1>
-                <p><?php echo $post->body; ?></p>
-                <hr>
-                <p>Posted In: <?php echo e($post->category->name); ?></p>
+        <div class="post">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1><?php echo e($post->title); ?></h1>
+                    <p><?php echo $post->body; ?></p>
+                    <hr>
+                    <p>Posted In: <?php echo e($post->category->name); ?></p>
+                </div>
             </div>
         </div>
 

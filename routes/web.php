@@ -54,8 +54,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('comments/{comments}/delete', ['uses' => 'CommentsController@delete', 'as' => 'comments.delete']);
 
     // Blog
-    Route::get('blog/{slug}', ['as' => 'blog.single', 'uses' => 'BlogController@getSingle'])
-    ->where('slug', '[\w\d\-\_]+');
+    Route::get('blog/{slug}', ['as' => 'blog.single', 'uses' => 'BlogController@getSingle'])->middleware('check.view.post')->where('slug', '[\w\d\-\_]+');
 
     Route::get('blog', ['as' => 'blog.index', 'uses' => 'BlogController@getIndex']);
 
@@ -79,6 +78,8 @@ Route::group(['middleware' => ['web']], function () {
     })->where('vue_capture', '[\/\w\.-]*');
 });
 
+
+
 Route::group(['prefix' => 'api', 'namespace' => 'Api'], function () {
     Route::get('admin/list/{object?}', 'AdminController@getListObject');
     Route::get('admin/{object}/{id}', 'AdminController@viewObject');
@@ -88,6 +89,10 @@ Route::group(['prefix' => 'api', 'namespace' => 'Api'], function () {
 
     //Website Crawler
     Route::post('crawlersite', 'CrawlerController@getUrlData');
+
+    Route::resource('categoriesaudio', 'CategoryAudioController', ['except' => ['create', 'edit']]);
+
+    Route::resource('audio', 'AudioController', ['except' => ['create', 'edit']]);
 });
 
 Auth::routes();

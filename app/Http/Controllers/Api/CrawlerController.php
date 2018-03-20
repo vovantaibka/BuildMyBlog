@@ -15,12 +15,13 @@ use paslandau\PageRank\Calculation\ResultFormatter;
 
 class CrawlerController extends Controller
 {
-    const CountNode = 5; // Tổng số nút sẽ duyệt qua
+    const CountNode = 15000; // Tổng số nút sẽ duyệt qua
     const BaseUrlWiki = "https://vi.wikipedia.org";
 
     private $goutteClient;
     private $guzzleClient;
     private $f;
+    private $fResult;
 
     public $crawledUrls = array(); // Chứa Info của tất cả những trang đã crawler
     public $linkedPages = array(); // Chứa tất cả hyperlink wiki vn của trang hiện tại
@@ -31,7 +32,7 @@ class CrawlerController extends Controller
     {
         $this->goutteClient = new Client();
         $this->guzzleClient = new GuzzleClient(array(
-            'timeout' => 60,
+            'timeout' => 15000,
         ));
         $this->goutteClient->setClient($this->guzzleClient);
     }
@@ -40,6 +41,14 @@ class CrawlerController extends Controller
     public function getUrlsWiki($url)
     {
         $crawler = $this->goutteClient->request('GET', $url);
+
+        $pageTitle = $crawler->filter('h1#firstHeading')->html();
+
+        $crawlerUrl = array(
+            'title' => $pageTitle
+        );
+
+        $this->crawledUrls[$url] = $crawlerUrl;
 
         $this->linkedPages = array();
         $this->url = $url;
@@ -69,6 +78,13 @@ class CrawlerController extends Controller
     {
         $crawler = $this->goutteClient->request('GET', $url);
 
+        $pageTitle = $crawler->filter('h1#firstHeading')->html();
+
+        $crawlerUrl = array(
+            'title' => $pageTitle
+        );
+
+        $this->crawledUrls[$url] = $crawlerUrl;
         $this->linkedPages = array();
         $this->url = $url;
 
@@ -78,37 +94,17 @@ class CrawlerController extends Controller
                     $link = $node->selectlink($node->text())->link();
                     $linkUrl = $link->getUri();
                     if (!strpos($linkUrl, "#") && strpos($linkUrl, self::BaseUrlWiki) === 0) {
-                        fputcsv($this->f, [$this->url, $linkUrl]);
-                        if (!in_array($linkUrl, $this->linkedPages) && (in_array($linkUrl, $this->urls))) {
-                            $this->linkedPages[] = $linkUrl;
+                        if(in_array($linkUrl, $this->urls)) {
+                            fputcsv($this->f, [$this->url, $linkUrl]);
+                            if(!in_array($linkUrl, $this->linkedPages)) {
+                                $this->linkedPages[] = $linkUrl;
+                            }
                         }
                     }
                 });
             }
         } catch (\InvalidArgumentException $e) {
             //
-        }
-    }
-
-    /**
-     * [getCrawlerUrl Crawl included title, hyperlinks]
-     * @param  [String] $url [Page url]
-     * @return [type]      [description]
-     */
-    public function getCrawlerUrl($url)
-    {
-        $crawler = $this->goutteClient->request('GET', $url);
-
-        $pageTitle = $crawler->filter('h1#firstHeading')->html();
-
-        $this->getUrlsWiki($url);
-
-        if (!array_key_exists($url, $this->crawledUrls)) {
-            $crawlerUrl = array(
-                'title' => $pageTitle,
-                'hyperlinks' => $this->linkedPages
-            );
-            $this->crawledUrls[$url] = $crawlerUrl;
         }
     }
     
@@ -120,7 +116,7 @@ class CrawlerController extends Controller
         $encoding = "utf-8";
         $delimiter = ",";
         $csvImporter = new CsvImporter($hasHeader, $sourceColumn, $destinationColumn, $encoding, $delimiter);
-        $pathToFile = public_path() . "/url-crawled-v4.csv";
+        $pathToFile = public_path() . "/count-node-100000.csv";
 
         $graph = $csvImporter->import($pathToFile);
 
@@ -150,89 +146,79 @@ class CrawlerController extends Controller
         $startUrl = $request->entrypoint;
         $crawler = $this->goutteClient->request('GET', $startUrl);
 
-        $this->urls[] = $startUrl;
-
         $title = $crawler->filter('h1#firstHeading')->html();
 
-        $crawlerStartUrl = array(
-            'title' => $title
-        );
-
-        $this->crawledUrls[$startUrl] = $crawlerStartUrl;
-
-        $this->f = fopen("url-crawled-v4.csv", "a+");
+        $this->urls[] = $startUrl;
+        $this->f = fopen("count-node-100000.csv", "a+");
 
         fputcsv($this->f, ["linkFrom", "linkTo"]);
 
         $this->getUrlsWiki($startUrl);
 
-        $hyperlinksStartUrl = $this->linkedPages;
-
-        $this->crawledUrls[$startUrl]['hyperlinks'] = $hyperlinksStartUrl;
-        
-        $numberHyperlinksStartUrl = count($this->linkedPages);
-
-        // foreach ($hyperlinksStartUrl as $hyperlink) {
-        //     $this->getCrawlerUrl($hyperlink);
-
-        //     $hyperlinksCurrentUrl = $this->linkedPages;
-
-        //     foreach ($hyperlinksCurrentUrl as $hyperlink) {
-        //         $this->getCrawlerUrl($hyperlink);
-        //     }
-        // }
-
         // Mở rộng đồ thì đến khi số đỉnh lớn hơn CountNode thì dừng lại
-        while (count($this->urls) < self::CountNode) {
-            $nextUrl = $this->linkedPages[array_rand($this->linkedPages)];
+        while ((count($this->urls) < self::CountNode) || (count($this->urls) > count($this->crawledUrls))) {
+            $nextUrl = $this->urls[array_rand($this->urls)];
 
-            while ((empty($nextUrl)) && (!array_key_exists($nextUrl, $this->crawledUrls))) {
-                $nextUrl = $this->linkedPages[array_rand($this->linkedPages)];
+            while ((empty($nextUrl)) || (array_key_exists($nextUrl, $this->crawledUrls))) {
+                $nextUrl = $this->urls[array_rand($this->urls)];
             }
 
             $crawler = $this->goutteClient->request('GET', $nextUrl);
 
             $pageTitle = $crawler->filter('h1#firstHeading')->html();
 
-            if (!array_key_exists($nextUrl, $this->crawledUrls)) {
-                $crawlerUrl = array(
-                    'title' => $pageTitle
-                );
-                $this->crawledUrls[$nextUrl] = $crawlerUrl;
-            }
+            $crawlerUrl = array(
+                'title' => $pageTitle
+            );
+            $this->crawledUrls[$nextUrl] = $crawlerUrl;
 
             $this->getUrlsWiki($nextUrl);
         }
 
         // Khi số nút của đồ thị lớn hơn CountNode thì sẽ crawler dữ liệu các url tìm thấy nhưng chưa duyệt qua
-        // $AllUrls = $this->urls;
 
-        // foreach ($AllUrls as $url) {
-            // if (!array_key_exists($url, $this->crawledUrls)) {
-                // $this->getUrlsWikiLinked($url);
-            // }
-        // }
+        if(count($this->urls) > count($this->crawledUrls))
+        {
+            $AllUrls = $this->urls;
+            foreach ($AllUrls as $url) {
+                if (!array_key_exists($url, $this->crawledUrls)) {
+                    $this->getUrlsWikiLinked($url);
+                }
+            }
+        }
 
         fclose($this->f);
 
-        $result = $title . "    " . count($this->urls) . "</br>";
-        $result .= "Pagerank    Title" . "</br>";
+        $this->fResult = fopen("report.txt", "a+");
 
+        fwrite($this->fResult, $title . "    " . count($this->urls) . "\n");
+        fwrite($this->fResult, "Pagerank    Title\n");
+        
         $resultArray = $this->getPageRank();
+
         foreach ($resultArray as $key => $value)
         {
-            $titlePage = "";
-            if (array_key_exists($key, $this->crawledUrls)) {
-                $titlePage = $this->crawledUrls[$key]['title'];
-            } else {
-                $crawler = $this->goutteClient->request('GET', $key);
-                $titlePage = $crawler->filter('h1#firstHeading')->html();
-            }
-            $result .= $value . "    " . $titlePage . "    " . $key . "</br>";
+            $titlePage = $this->crawledUrls[$key]['title'];
+            fwrite($this->fResult, $value . "    " . $titlePage . "\n");
+            // $titlePage = "";
+            // if (array_key_exists($key, $this->crawledUrls)) {
+            //     $titlePage = $this->crawledUrls[$key]['title'];
+            // } else {
+            //     $crawler = $this->goutteClient->request('GET', $key);
+            //     $titlePage = $crawler->filter('h1#firstHeading')->html();
+            // }
+            
+            // $result .= $value . "    " . $titlePage . "</br>";
         }
+
+        fclose($this->fResult);
+
+        $result = "OK";
         
         return response()->json(array(
             'result' => $result
-        ));;
+        ));
     }
 }
+
+// https://vi.wikipedia.org/wiki/Qu%E1%BA%A7n_%C4%91%E1%BA%A3o_Sunda_Nh%E1%BB%8F

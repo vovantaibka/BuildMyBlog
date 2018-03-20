@@ -63,12 +63,12 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 286);
+/******/ 	return __webpack_require__(__webpack_require__.s = 292);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 111:
+/***/ 112:
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -86,18 +86,11 @@ __webpack_require__(41);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example', __webpack_require__(276));
+Vue.component('example', __webpack_require__(280));
 
 var app = new Vue({
   el: '#app'
 });
-
-/***/ }),
-
-/***/ 113:
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
 
 /***/ }),
 
@@ -123,6 +116,13 @@ var app = new Vue({
 /***/ }),
 
 /***/ 117:
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ 118:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1014,41 +1014,6 @@ module.exports = InterceptorManager;
 
 /***/ }),
 
-/***/ 276:
-/***/ (function(module, exports, __webpack_require__) {
-
-var Component = __webpack_require__(51)(
-  /* script */
-  __webpack_require__(117),
-  /* template */
-  __webpack_require__(280),
-  /* scopeId */
-  null,
-  /* cssModules */
-  null
-)
-Component.options.__file = "/var/www/html/MyBlog/resources/assets/js/components/Example.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] Example.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-258f27f8", Component.options)
-  } else {
-    hotAPI.reload("data-v-258f27f8", Component.options)
-  }
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-
 /***/ 28:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1139,6 +1104,41 @@ module.exports = function dispatchRequest(config) {
 /***/ 280:
 /***/ (function(module, exports, __webpack_require__) {
 
+var Component = __webpack_require__(51)(
+  /* script */
+  __webpack_require__(118),
+  /* template */
+  __webpack_require__(285),
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "/var/www/html/MyBlog/resources/assets/js/components/Example.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] Example.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-258f27f8", Component.options)
+  } else {
+    hotAPI.reload("data-v-258f27f8", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ 285:
+/***/ (function(module, exports, __webpack_require__) {
+
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _vm._m(0)
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -1166,18 +1166,6 @@ if (false) {
 
 /***/ }),
 
-/***/ 286:
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(111);
-__webpack_require__(115);
-__webpack_require__(116);
-__webpack_require__(113);
-module.exports = __webpack_require__(114);
-
-
-/***/ }),
-
 /***/ 29:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1201,6 +1189,18 @@ module.exports = function enhanceError(error, config, code, response) {
   error.response = response;
   return error;
 };
+
+
+/***/ }),
+
+/***/ 292:
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(112);
+__webpack_require__(116);
+__webpack_require__(117);
+__webpack_require__(114);
+module.exports = __webpack_require__(115);
 
 
 /***/ }),

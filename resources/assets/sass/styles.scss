@@ -68,7 +68,7 @@ body {
 
 #body {
     min-height: 522px;
-    color: white;
+    // color: white;
 }
 
 .btn-primary {
@@ -193,6 +193,7 @@ a:hover {
         border-radius: 0px;
     }
     #posts {
+        color: white;
         .post {
             margin-bottom: 40px;
             border: 0.5px solid gray;
@@ -220,9 +221,6 @@ a:hover {
                         color: #39CCCC;
                     }
                 }
-                span {
-                    color: gray;
-                }
                 .author {
                     clear: both;
                     height: 50px;
@@ -233,11 +231,14 @@ a:hover {
                         position: relative;
                         float: left;
                         padding-left: 10px;
-                        .svg-icon {
+                        .name .svg-icon {
                             position: absolute;
                             top: 0px; 
                             left: 80px;
                             @include svg-icon-size(20px,20px);
+                        }
+                        .time span {
+                            color: #DDDDDD;
                         }
                     }
                     img {
@@ -253,6 +254,9 @@ a:hover {
                     h3 {
                         margin: 0px 0px 20px 0px;
                     }
+                    span {
+                        color: #DDDDDD;
+                    }
                 }
                 .interactive {
                     width: 100%;
@@ -266,6 +270,9 @@ a:hover {
                         margin-bottom: 5px;
                         background-color: gray;
                     }
+                    .views span {
+                        color: #DDDDDD;
+                    }
                     .comment {
                         margin-top: 0px;
                         a span {
@@ -274,12 +281,10 @@ a:hover {
                             }
                         }
                     }
-                    .like {
-                        .svg-icon {
-                            float: right;
-                            path {
-                                fill: red
-                            }
+                    .like .svg-icon {
+                        float: right;
+                        path {
+                            fill: red
                         }
                     }
                 }
@@ -292,6 +297,7 @@ a:hover {
     margin: 90px 90px 0px 90px;
     padding: 50px 100px 80px 100px;
     border: 0.5px solid gray;
+    color: white;
 }
 
 /* Page Listen & Read */
@@ -541,7 +547,7 @@ a:hover {
                             }
                             span {
                                 position: absolute;
-                                left: 44px;
+                                left: 22px;
                             }
                         }
                         .comment {

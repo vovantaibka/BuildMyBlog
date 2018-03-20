@@ -11,8 +11,23 @@ use paslandau\PageRank\Edge;
 use paslandau\PageRank\Calculation\PageRank;
 use paslandau\PageRank\Calculation\ResultFormatter;
 
+use Goutte\Client;
+use GuzzleHttp\Client as GuzzleClient;
+
 class TestController extends Controller
 {
+    private $goutteClient;
+    private $guzzleClient;
+
+    public function __construct()
+    {
+        $this->goutteClient = new Client();
+        $this->guzzleClient = new GuzzleClient(array(
+            'timeout' => 60,
+        ));
+        $this->goutteClient->setClient($this->guzzleClient);
+    }
+
     public function testGoogleMapApi()
     {
         return view('test.map');
@@ -36,7 +51,7 @@ class TestController extends Controller
         $encoding = "utf-8";
         $delimiter = ",";
         $csvImporter = new CsvImporter($hasHeader, $sourceColumn, $destinationColumn, $encoding, $delimiter);
-        $pathToFile = public_path() . "/url-crawled-v4.csv";
+        $pathToFile = public_path() . "/count-node-10000-v2.csv";
 
         $graph = $csvImporter->import($pathToFile);
 
@@ -53,7 +68,22 @@ class TestController extends Controller
         // print the result
         $formatter = new ResultFormatter(4);
 
-        var_dump($formatter->toArrayFormatter($result));
+//        var_dump($formatter->toArrayFormatter($result));
+
+        $resultArray = $formatter->toArrayFormatter($result);
+        echo count($resultArray);
+        // $string = "";
+
+        // foreach ($resultArray as $key => $value)
+        // {
+        //     try {
+        //         $crawler = $thí->goutteClient->request('GET', $key);
+        //         $titlePage = $crawler->filter('h1#firstHeading')->html();
+        //         echo $value . "    " . $titlePage . "</br>";
+        //     } catch (\InvalidArgumentException $e) {
+
+        //     }
+        // }
     }
 
     public function getVueComponent()

@@ -22,12 +22,12 @@ const router = new VueRouter({
 		},
 		{
 			path: '/listen/category',
-			name: 'listen-category',
+			name: 'Listen Category',
 			component: ListenCategory
 		},
 		{
 			path: '/listen',
-			name: 'audio',
+			name: 'Audio',
 			component: Audio
 		}
 	]

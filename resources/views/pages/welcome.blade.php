@@ -46,9 +46,9 @@
                         <div class="line"></div>
                         <div class="row">
                             <div class="views col-md-4">
-                                <span>Views</span>
+                                <span>{{ $post->views_count }} Views</span>
                             </div>
-                            <div class="comment col-md-6">
+                            <div class="c col-md-6">
                                 <a href=""><span>Write a comment</span></a>
                             </div>
                             <div class="like col-md-2">
