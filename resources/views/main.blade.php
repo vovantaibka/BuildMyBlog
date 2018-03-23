@@ -5,23 +5,29 @@
 </head>
 
 <body>
-@include('partials._nav')
-
 @yield('process')
 
 <div id="wrapper">
     @include('partials._messages')
 
-    <div id="body">
-        @yield('content')
-    </div>
+	<div id="app">
+    	@yield('content')
+	</div>
 
     <div id="footer">
         @include('partials._footer')
     </div>
 </div><!-- end of .container -->
 
-@include('partials._javascript')
-@yield('scripts')
+<div id="scripts">
+	@include('partials._javascript')
+	@yield('scripts')
+</div>
+
+<!-- Script -->
+<script type="text/javascript">
+	var baseUrl = '{{ url('/') }}';
+</script>
+<script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>

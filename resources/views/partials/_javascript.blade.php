@@ -8,6 +8,9 @@
 <script>
     var apiUrl = '{{ url('/api/admin') }}';
     $(function() {
+    	$("li.dropdown").click(function() {
+            $("#menu-list").find("li").removeClass("active");
+        })
         $('#page-home').parent().removeClass("container");
         $('#blog').addClass("container");
     })

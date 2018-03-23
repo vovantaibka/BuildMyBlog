@@ -52,16 +52,12 @@
                     {{ csrf_field() }}
                 </form>
             </li>
+            @else
+            <li><a href="{{ route('login') }}">Login</a></li>
+            <li><a href="{{ route('register') }}">Register</a></li>
+            @endif
         </ul>
-    </li>
-    @else
-
-    <li><a href="{{ route('login') }}">Login</a></li>
-    <li><a href="{{ route('register') }}">Register</a></li>
-
-    @endif
-</ul>
-</div><!-- /.navbar-collapse -->
+    </div><!-- /.navbar-collapse -->
 </div><!-- /.container-fluid -->
 
 <script type="text/javascript">

@@ -30,6 +30,11 @@ class PagesController extends Controller
         # compile or process data from the model if needed
         # pass that data to the correct view
         $posts = Post::orderBy('created_at', 'desc')->limit(4)->get();
+
+        foreach ($posts as $post) {
+            $post["url_image_post"] = '/imgs/' . $post->image;
+        }
+
         $categories = Category::all();
         return view('pages.welcome')->withPosts($posts)->withCategories($categories);
     }
