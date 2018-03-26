@@ -11,26 +11,26 @@
     </div>  
     <div class="table-responsive">
       <b-table striped
-        hover
-        :items="audios"
-        :fields="fields"
-        :current-page="currentPage"
-        :per-page="perPage"
+      hover
+      :items="audios"
+      :fields="fields"
+      :current-page="currentPage"
+      :per-page="perPage"
       >
-        <template slot="image" slot-scope="data">
-          <b-img thumbnail fluid :src="data.value" alt="Thumbnail"/>
-        </template>
-        <template slot="actions" slot-scope="data">
-          <b-button size="sm" @click.stop="showModalEdit(data.item, data.index, $event.target)" class="mr-1">
-            Edit
-          </b-button>
-          <b-button size="sm" @click.stop="deleteAudio(data.item, data.index)">
-            Delete
-          </b-button>
-        </template>
+      <template slot="image" slot-scope="data">
+        <b-img thumbnail fluid :src="data.value" alt="Thumbnail"/>
+      </template>
+
+      <template slot="actions" slot-scope="data">
+        <b-button size="sm" @click.stop="showModalEdit(data.item, data.index, $event.target)" class="mr-1">
+          Edit
+        </b-button>
+        <b-button size="sm" @click.stop="deleteAudio(data.item, data.index)">
+          Delete
+        </b-button>
+      </template>
       </b-table>
     </div>
-
     <b-row no-gutters>
       <b-col md="4" offset-md="2" class="my-1">
         <b-pagination side="md" :total-rows="totalRows" v-model="currentPage" :per-page="perPage"></b-pagination>
@@ -50,50 +50,50 @@ export default {
     return {
       audios: [],
       fields: [
-        {
-          isRowHeader: true,
-          key: 'id',
-          sortable: true,
-          variant: 'primary'
-        },
-        {
-          key: 'image',
-          sortable: false,
-          class: 'img',
-          formatter: (value) => {
-            return "./imgs/" + value
-          }
-        },
-        {
-          key: 'title',
-          sortable: false
-        },
-        {
-          key: 'link',
-          sortable: false,
-          formatter: (value) => {
-            return value.slice(0, 50) + (value.length > 50 ? "..." : "");
-          }
-        },
-        {
-          key: 'created_at',
-          sortable: false,
-          formatter: (value) => { 
-            return new Date(value).toLocaleDateString("en-US"); 
-          }
-        },
-        {
-          key: 'updated_at',
-          sortable: false,
-          formatter: (value) => { 
-            return new Date(value).toLocaleDateString("en-US"); 
-          }
-        },
-        {
-          key: 'actions',
-          label: 'Actions',
-          'class': 'text-center btn-action-group'
+      {
+        isRowHeader: true,
+        key: 'id',
+        sortable: true,
+        variant: 'primary'
+      },
+      {
+        key: 'image',
+        sortable: false,
+        class: 'img',
+        formatter: (value) => {
+          return "./imgs/" + value
         }
+      },
+      {
+        key: 'title',
+        sortable: false
+      },
+      {
+        key: 'link',
+        sortable: false,
+        formatter: (value) => {
+          return value.slice(0, 50) + (value.length > 50 ? "..." : "");
+        }
+      },
+      {
+        key: 'created_at',
+        sortable: false,
+        formatter: (value) => { 
+          return new Date(value).toLocaleDateString("en-US"); 
+        }
+      },
+      {
+        key: 'updated_at',
+        sortable: false,
+        formatter: (value) => { 
+          return new Date(value).toLocaleDateString("en-US"); 
+        }
+      },
+      {
+        key: 'actions',
+        label: 'Actions',
+        'class': 'text-center btn-action-group'
+      }
       ],
       currentPage: 1,
       perPage: 5,
@@ -125,10 +125,10 @@ export default {
 </script>
 
 <style type="text/css">
-  .img {
-    width: 100px;
-  }
-  .btn-action-group {
-    width: 150px;
-  }
+.img {
+  width: 100px;
+}
+.btn-action-group {
+  width: 150px;
+}
 </style>

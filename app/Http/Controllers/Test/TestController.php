@@ -90,4 +90,9 @@ class TestController extends Controller
     {
         return view('test.vue');
     }
+
+    public function getRouterVue()
+    {
+        return view('test.routervuejs');
+    }
 }

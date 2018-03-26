@@ -129,6 +129,7 @@ a:hover {
     width: 142px;
     color: black;
     border: none;
+    border-radius: 0px;
     &:hover {
         background-color: gray;
         color: white;
@@ -434,7 +435,57 @@ a:hover {
         }
         .about {
             text-align: center;
+            font-family: 'IBM Plex Serif', serif;
+            font-size: large;
             line-height: 1.7em;
+        }
+        .contact {
+            .social-nw {
+                ul {
+                    display: flex;
+                    max-width: 12%;
+                    margin: 0 auto;
+                    padding-left: 0;
+                    margin-top: 80px;
+                    align-items: center;
+                    justify-content: space-around;
+                    li {
+                        list-style: none;
+                        margin-right: 1.5em;
+                        text-align: center;
+                        .svg-icon {
+                            @include svg-icon-size(30px,30px);
+                        }
+                    }
+                }
+            }
+            .remind {
+                margin: 30px;
+                font-family: 'IBM Plex Serif', serif;
+                font-size: large;
+            }
+            .form-contact {
+                margin: auto;
+                width: 520px;
+                #group-name-email {
+                    div {
+                        display: flex;
+                        #sender-name {
+                            margin-right: 10px;
+                        }
+                    }
+                }
+                input {
+                    border: 1px solid rgba(0, 0, 0, 1);
+                    border-radius: 2px;
+                }
+                button[type="submit"] {
+                    display: block;
+                    width: 100%;
+                    padding-top: 10px;
+                    padding-bottom: 10px;
+                }
+            }
         }
     }
 }
@@ -595,10 +646,138 @@ a:hover {
     }
 } 
 
+#chat-room {
+    background-color: white;
+}
+
 #changePwModal .modal-body {
     margin: 20px 40px;
 }                                                                                                                                                                                                                                                             
 
 #modalLabel {
     float: left;
+}
+
+// Modal 
+#signInUpModal {
+    .modal-dialog {
+        width: 480px;
+        padding: 30px;
+        .modal-content {
+            padding: 15px;
+            border-radius: 2px;
+            .modal-header {
+                padding-bottom: 0px!important;
+                .tabs-list{
+                    display: flex;
+                    align-items: center;
+                    padding-left: 0;
+                    margin-bottom: 0;
+                    list-style: none;
+                    border-bottom: 1px solid #dbe3e8;
+                    .tabs-item {
+                        flex: 1;
+                        text-align: center;
+                    }
+                }
+            }
+            .modal-body {
+                .tab-content {
+                    #login {
+                        margin-top: 1.5rem!important;
+                        a {
+                            float: right;
+                        }
+                        .clearfix {
+                            display: block;
+                            content: "";
+                            clear: both;
+                            &:after {
+                                box-sizing: inherit;
+                            }
+                        }
+                        .divider {
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            margin-top: 15px;
+                            margin-bottom: 15px;
+                            .dash {
+                                flex: 1;
+                                height: 1px;
+                                background-color: #d6d6d7;
+                            }
+                            .dash-text {
+                                padding-left: 8px;
+                                padding-right: 8px;
+                            }
+                        }
+                        .social-nw {
+                            ul {
+                                display: flex;
+                                max-width: 50%;
+                                margin: 0 auto;
+                                padding-left: 0;
+                                margin-top: 15px;
+                                align-items: center;
+                                justify-content: space-around;
+                                li {
+                                    list-style: none;
+                                    margin-right: 1.5em;
+                                    text-align: center;
+                                    .svg-icon {
+                                        @include svg-icon-size(24px,24px);
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    #register {
+                        margin-top: 1.5rem!important;
+                        .divider {
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            margin-top: 15px;
+                            margin-bottom: 15px;
+                            .dash {
+                                flex: 1;
+                                height: 1px;
+                                background-color: #d6d6d7;
+                            }
+                            .dash-text {
+                                padding-left: 8px;
+                                padding-right: 8px;
+                            }
+                        }
+                        .social-nw {
+                            ul {
+                                display: flex;
+                                max-width: 50%;
+                                margin: 0 auto;
+                                padding-left: 0;
+                                margin-top: 15px;
+                                align-items: center;
+                                justify-content: space-around;
+                                li {
+                                    list-style: none;
+                                    margin-right: 1.5em;
+                                    text-align: center;
+                                    .svg-icon {
+                                        @include svg-icon-size(24px,24px);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.auth-brand {
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }

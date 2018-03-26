@@ -64,7 +64,11 @@
 		</div>
 
 		<div class="show-more text-center">
-		    <button type="button" class="show-more-btn"><a href="/blog">Show More</a></button>
+		    <!-- <button type="button" class="show-more-btn"><a href="/blog">Show More</a></button> -->
+		    <!-- <b-button type="button" class="show-more-btn" v-on:click="showMorePosts($event)">Show More</b-button> -->
+		    <b-button type="button" class="show-more-btn">
+		    	<router-link to="/blog">Show More</router-link>
+		    </b-button>
 		</div>
 	</div>
 </template>
@@ -90,6 +94,11 @@ export default {
 		.catch(function(resp) {
 			console.log(resp)
 		})
+	},
+	methods: {
+		// showMorePosts: function($event) {
+		// 	route.push({ path: '/blog' })
+		// }
 	}
 }
 </script>

@@ -11,11 +11,11 @@
 		</div>
 		<div class="table-responsive">
 			<b-table striped 
-				hover 
-				:items="categories" 
-				:fields="fields"
-				:current-page="currentPage"
-				:per-page="perPage">
+      hover 
+      :items="categories" 
+      :fields="fields"
+      :current-page="currentPage"
+      :per-page="perPage">
 <!-- 				<template slot="created_at" slot-scope="data">
 					{{ data.value }}
 				</template>
@@ -45,165 +45,165 @@
 
 		<!-- Modal Create & Edit -->
 		<b-modal id="modalCE"
-      @shown="focusInput"
-			@ok="handleOk"
-      @hidden="resetModalCE"
-			:title="modalCE.title"
-			ok-only>
-			<form @submit.stop.prevent="handleSubmitFormEdit">
-				<b-form-input ref="focusThis" 
-                      type="text"
-					            v-model="categoryName"
-                      :state="stateCategoryName"
-                      aria-describedby="inputCategoryNameFeedback"
-                      placeholder="Enter category name"
-					></b-form-input>
-          <b-form-invalid-feedback id="inputCategoryNameFeedback">
-            Enter at least 3 letters
-          </b-form-invalid-feedback>
-			</form>
-		</b-modal>
-	</b-container>
+    @shown="focusInput"
+    @ok="handleOk"
+    @hidden="resetModalCE"
+    :title="modalCE.title"
+    ok-only>
+    <form @submit.stop.prevent="handleSubmitFormEdit">
+      <b-form-input ref="focusThis" 
+      type="text"
+      v-model="categoryName"
+      :state="stateCategoryName"
+      aria-describedby="inputCategoryNameFeedback"
+      placeholder="Enter category name"
+      ></b-form-input>
+      <b-form-invalid-feedback id="inputCategoryNameFeedback">
+        Enter at least 3 letters
+      </b-form-invalid-feedback>
+    </form>
+  </b-modal>
+</b-container>
 </template>
 
 <script>
 export default {
-    computed: {
-      stateCategoryName() {
-        return this.categoryName.length > 2 ? true : false
-      }
+  computed: {
+    stateCategoryName() {
+      return this.categoryName.length > 2 ? true : false
+    }
+  },
+  data: function() {
+    return {
+     categories: [],
+     fields: [
+     {
+      isRowHeader: true,
+      key: 'id',
+      sortable: true,
+      variant: 'primary'
     },
-  	data: function() {
-  		return {
-  			categories: [],
-  			fields: [
-  				{
-            isRowHeader: true,
-  					key: 'id',
-  					sortable: true,
-  					variant: 'primary'
-  				},
-  				{
-  					key: 'name',
-  					sortable: true
-  				},
-  				{
-  					key: 'created_at',
-  					sortable: false,
-  					formatter: (value) => { 
-  						return new Date(value).toLocaleDateString("en-US"); 
-  					}
-  				},
-  				{
-  					key: 'updated_at',
-  					sortable: false,
-  					formatter: (value) => { 
-  						return new Date(value).toLocaleDateString("en-US"); 
-  					}
-  				},
-  				{
-  					key: 'actions',
-  					label: 'Actions',
-  					'class': 'text-center'
-  				}
-  			],
-  			currentPage: 1,
-  			perPage: 5,
-  			totalRows: null,
-  			pageOptions: [5, 10, 20],
-  			modalCE: { title: ''},
-  			categoryName: '',
-  			categoryId: '',
-        categoryIndex: '',
-        isCreate: false
-  		}
-  	},
-  	mounted() {
-  		var app = this
-  		axios.get('/api/categoriesaudio')
-  			.then(function(resp) {
-  				app.categories = resp.data
-  				app.totalRows = resp.data.length
-  			})
-  			.catch(function(resp) {
-  				console.log(resp)
+    {
+     key: 'name',
+     sortable: true
+   },
+   {
+     key: 'created_at',
+     sortable: false,
+     formatter: (value) => { 
+      return new Date(value).toLocaleDateString("en-US"); 
+    }
+  },
+  {
+   key: 'updated_at',
+   sortable: false,
+   formatter: (value) => { 
+    return new Date(value).toLocaleDateString("en-US"); 
+  }
+},
+{
+ key: 'actions',
+ label: 'Actions',
+ 'class': 'text-center'
+}
+],
+currentPage: 1,
+perPage: 5,
+totalRows: null,
+pageOptions: [5, 10, 20],
+modalCE: { title: ''},
+categoryName: '',
+categoryId: '',
+categoryIndex: '',
+isCreate: false
+}
+},
+mounted() {
+  var app = this
+  axios.get('/api/categoriesaudio')
+  .then(function(resp) {
+    app.categories = resp.data
+    app.totalRows = resp.data.length
+  })
+  .catch(function(resp) {
+    console.log(resp)
   				// alert("Could not load categories audio")
   			});
-  	},
-  	methods: {
-      showModalCreate(button) {
-        this.modalCE.title = 'Create Category'
-        
-        this.isCreate = true;
-        this.$root.$emit('bv::show::modal', 'modalCE', button)
-      },
-  		showModalEdit(item, index, button) {
-        this.modalCE.title = 'Edit Category'
-  			
-        this.categoryName = item.name
-  			this.categoryId = item.id
-        this.categoryIndex = index
+},
+methods: {
+  showModalCreate(button) {
+    this.modalCE.title = 'Create Category'
+    
+    this.isCreate = true;
+    this.$root.$emit('bv::show::modal', 'modalCE', button)
+  },
+  showModalEdit(item, index, button) {
+    this.modalCE.title = 'Edit Category'
+    
+    this.categoryName = item.name
+    this.categoryId = item.id
+    this.categoryIndex = index
 
-        this.isCreate = false;
+    this.isCreate = false;
 
-      	this.$root.$emit('bv::show::modal', 'modalCE', button)
-  		},
-  		handleOk(evt) {
-  			evt.preventDefault()
+    this.$root.$emit('bv::show::modal', 'modalCE', button)
+  },
+  handleOk(evt) {
+   evt.preventDefault()
 
-      	if (!this.categoryName) {
-        	alert('Please enter your name')
-      	} else {
-        	this.handleSubmitFormEdit(evt.target)
-      	}
-  		},
-  		handleSubmitFormEdit(button) {
-  			var app = this
-  			var newCategory = {
-          'name': this.categoryName
-        };
-        
-        if(app.isCreate) {
-          axios.post('/api/categoriesaudio', newCategory).then(
-            function(resp) {  
-              app.categories.push(resp.data)
-              app.totalRows = app.categories.length
-            }).catch(function(resp) {
-              console.log(resp)
-            });
-        } else {
-          var index = app.categoryIndex
+   if (!this.categoryName) {
+     alert('Please enter your name')
+   } else {
+     this.handleSubmitFormEdit(evt.target)
+   }
+ },
+ handleSubmitFormEdit(button) {
+   var app = this
+   var newCategory = {
+    'name': this.categoryName
+  };
+  
+  if(app.isCreate) {
+    axios.post('/api/categoriesaudio', newCategory).then(
+      function(resp) {  
+        app.categories.push(resp.data)
+        app.totalRows = app.categories.length
+      }).catch(function(resp) {
+        console.log(resp)
+      });
+    } else {
+      var index = app.categoryIndex
 
-          axios.patch('/api/categoriesaudio/' + app.categoryId, newCategory).then(function(resp) {
-            app.categories.splice(index, 1, resp.data)
-          }).catch(function(resp) {
-            console.log(resp)
-          })
-        }
-  			
-        this.$root.$emit('bv::hide::modal', 'modalCE', button)
-  		},
-      deleteCategory(item, index) {
-        if(confirm("Do you really want to delete it?")) {
-          var app = this
-          app.categoryId = item.id
-          axios.delete('/api/categoriesaudio/' + app.categoryId).then(
-            function(resp) {
-            app.categories.splice(((app.currentPage - 1) * app.perPage + index), 1)
-            app.totalRows = app.categories.length
-          }).catch(function(resp) {
-            console.log(resp);
-          });
-        }
-      },
-      focusInput() {
-        this.$refs.focusThis.focus()
-      },
-  		resetModalCE() {
-        this.categoryName = ''
-        this.categoryId = ''
-        this.categoryIndex = ''
-    	}
-  	}
+      axios.patch('/api/categoriesaudio/' + app.categoryId, newCategory).then(function(resp) {
+        app.categories.splice((app.currentPage - 1) * app.perPage + index, 1, resp.data)
+      }).catch(function(resp) {
+        console.log(resp)
+      })
+    }
+    
+    this.$root.$emit('bv::hide::modal', 'modalCE', button)
+  },
+  deleteCategory(item, index) {
+    if(confirm("Do you really want to delete it?")) {
+      var app = this
+      app.categoryId = item.id
+      axios.delete('/api/categoriesaudio/' + app.categoryId).then(
+        function(resp) {
+          app.categories.splice(((app.currentPage - 1) * app.perPage + index), 1)
+          app.totalRows = app.categories.length
+        }).catch(function(resp) {
+          console.log(resp);
+        });
+      }
+    },
+    focusInput() {
+      this.$refs.focusThis.focus()
+    },
+    resetModalCE() {
+      this.categoryName = ''
+      this.categoryId = ''
+      this.categoryIndex = ''
+    }
+  }
 }
 </script>

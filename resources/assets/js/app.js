@@ -20,12 +20,22 @@ const BlogPage = Vue.component('blog-page', require('./components/BlogPage.vue')
 const AboutPage = Vue.component('about-page', require('./components/AboutPage.vue'));
 const ListenEnglishPage = Vue.component('listen-page', require('./components/ListenEnglishPage.vue'));
 
+const ChatRoomPage = Vue.component('chat-room-page', require('./components/chatroom/ChatRoomPage.vue'));
+const ChatMessage = Vue.component('chat-message', require('./components/chatroom/ChatMessage.vue'));
+const ChatLog = Vue.component('chat-log', require('./components/chatroom/ChatLog.vue'));
+const ChatComposer = Vue.component('chat-composer', require('./components/chatroom/ChatComposer.vue'));
+
 const router = new VueRouter({
 	routes: [
 		{
-			path: '/home',
+			path: '/',
 			name: 'home-page',
 			component: HomePage
+		},
+		{
+			path: '/home',
+			name: 'home-page',
+			component: HomePage,
 		},
 		{
 			path: '/blog',
@@ -41,6 +51,11 @@ const router = new VueRouter({
 			path: '/about',
 			name: 'about-page',
 			component: AboutPage
+		},
+		{
+			path: '/chat-room',
+			name: 'chat-room-page',
+			component: ChatRoomPage
 		}
 	]
 });

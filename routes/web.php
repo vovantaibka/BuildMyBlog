@@ -1,4 +1,5 @@
 <?php
+use App\Message;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,12 +15,19 @@
 Route::get('/', 'PagesController@getIndex');
 Route::get('/home', 'HomeController@index');
 
+Route::group(['middleware' => ['auth']], function() {
+    Route::get('/messages', 'ChatRoomController@getMessages');
+
+    Route::post('/messages', 'ChatRoomController@storeMessage');
+});
+
 Route::group(['namespace' => 'Test'], function () {
     Route::get('test/map', 'TestController@testGoogleMapApi');
     Route::get('test/zoom-image', 'TestController@testZoomImage');
     Route::get('test/jquery', 'TestController@testJQuery');
     Route::get('test/pagerank', 'TestController@getPagerank');
     Route::get('test/vue', 'TestController@getVueComponent');
+    Route::get('test/router-vue', 'TestController@getRouterVue');
 });
 
 Route::group(['middleware' => ['web']], function () {
@@ -58,7 +66,9 @@ Route::group(['middleware' => ['web']], function () {
 
     Route::get('blog', ['as' => 'blog.index', 'uses' => 'BlogController@getIndex']);
 
-    Route::get('about', 'PagesController@getAbout');
+    Route::get('home', 'BlogController@getHomePage');
+    Route::get('blog', 'BlogController@getBlogPage');
+    Route::get('listen', 'BlogController@getListenPage');
 
     // Contact
     Route::get('contact', 'PagesController@getContact');

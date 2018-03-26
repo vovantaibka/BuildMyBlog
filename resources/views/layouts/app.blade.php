@@ -10,6 +10,9 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
+    <!-- Font Google -->
+    <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Serif" rel="stylesheet">
+
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
@@ -82,6 +85,6 @@
     </div>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/vue-app.js') }}"></script>
+    <script src="{{ asset('js/script.js') }}"></script>
 </body>
 </html>
