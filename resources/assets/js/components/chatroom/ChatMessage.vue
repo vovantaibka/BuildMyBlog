@@ -1,24 +1,30 @@
 <template>
-	<div class="chat-message">
-		<p>{{ message.message }}</p>
-		<small>{{ userName }}</small>
+	<div>
+		<div v-if="user.id === message.user.id">
+			<div class="message sent">
+				<img :src="image" :alt="user.name" :title="user.name">
+				<p>{{ message.message }}</p>
+			</div>
+		</div>
+		<div v-else>
+			<div class="message replies">
+				<img :src="image" :alt="message.user.name" :title="message.user.name">
+				<p>{{ message.message }}</p>
+			</div>
+		</div>
 	</div>
 </template>
 
 <script>
-	export default {
-		props: [
-			'message',
-			'userName'
-		],
+export default {
+	props: [
+		'message',
+		'user'
+	],
+	data: function() {
+		return {
+			image: imgsUrl + "/" + this.message.user.image
+		}
 	}
+}
 </script>
-
-<style type="text/css">
-	.chat-message {
-		padding: 1rem;
-	}
-	.chat-message > p {
-		margin-bottom: .5rem;
-	}
-</style>

@@ -2,7 +2,7 @@
 	<div class="col-md-8 col-md-offset-1 contact">
 		<div class="row">
 			<div class="col-md-2">
-				<img src="{{ asset('imgs/1516897635.jpg') }}">
+				<img src="{{ asset('imgs/admin.jpeg') }}">
 			</div>
 			<div class="col-md-8 info">
 				<span><h4>People Do Crazy Stuff and I Take Pictures of Them.</h4></span>

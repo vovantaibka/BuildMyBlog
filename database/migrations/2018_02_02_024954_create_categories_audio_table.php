@@ -13,11 +13,14 @@ class CreateCategoriesAudioTable extends Migration
      */
     public function up()
     {
-        Schema::connection('mysql_2')->create('categories', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('name');
-            $table->timestamps();
-        });
+        if(!Schema::connection('mysql_2')->hasTable('categories'))
+        {
+            Schema::connection('mysql_2')->create('categories', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('name');
+                $table->timestamps();
+            });
+        }
     }
 
     /**
@@ -27,6 +30,6 @@ class CreateCategoriesAudioTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::connection('mysql_2')->dropIfExists('categories');
     }
 }

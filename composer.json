@@ -10,18 +10,21 @@
   "require": {
     "php": ">=5.6.4",
     "fabpot/goutte": "^3.2",
-    "intervention/image": "^2.3",
+    "intervention/image": "^2.4",
     "laravel/framework": "5.4.*",
     "laravel/tinker": "~1.0",
     "laravelcollective/html": "^5.",
-    "pusher/pusher-php-server": "~3.0"
+    "pusher/pusher-php-server": "~3.0",
+    "guzzlehttp/guzzle": "~6.0",
+    "maatwebsite/excel": "~2.1.0"
   },
   "require-dev": {
-    "fzaninotto/faker": "~1.4",
-    "mockery/mockery": "0.9.*",
-    "phpunit/phpunit": "~5.7",
     "doctrine/dbal": "*",
-    "paslandau/pagerank": "dev-master"
+    "fzaninotto/faker": "~1.4",
+    "laravel/dusk": "^1.0",
+    "mockery/mockery": "0.9.*",
+    "paslandau/pagerank": "dev-master",
+    "phpunit/phpunit": "~5.7"
   },
   "autoload": {
     "classmap": [

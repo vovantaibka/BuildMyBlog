@@ -53,7 +53,7 @@
     <form @submit.stop.prevent="handleSubmitFormEdit">
       <b-form-input ref="focusThis" 
       type="text"
-      v-model="categoryName"
+      v-model="category.name"
       :state="stateCategoryName"
       aria-describedby="inputCategoryNameFeedback"
       placeholder="Enter category name"
@@ -70,7 +70,7 @@
 export default {
   computed: {
     stateCategoryName() {
-      return this.categoryName.length > 2 ? true : false
+      return this.category.name.length > 2 ? true : false
     }
   },
   data: function() {
@@ -112,9 +112,11 @@ perPage: 5,
 totalRows: null,
 pageOptions: [5, 10, 20],
 modalCE: { title: ''},
-categoryName: '',
-categoryId: '',
-categoryIndex: '',
+category: {
+  id: '',
+  name: '',
+  index: ''
+},
 isCreate: false
 }
 },
@@ -140,9 +142,9 @@ methods: {
   showModalEdit(item, index, button) {
     this.modalCE.title = 'Edit Category'
     
-    this.categoryName = item.name
-    this.categoryId = item.id
-    this.categoryIndex = index
+    this.category.name = item.name
+    this.category.id = item.id
+    this.category.index = index
 
     this.isCreate = false;
 
@@ -151,7 +153,7 @@ methods: {
   handleOk(evt) {
    evt.preventDefault()
 
-   if (!this.categoryName) {
+   if (!this.category.name) {
      alert('Please enter your name')
    } else {
      this.handleSubmitFormEdit(evt.target)
@@ -160,14 +162,14 @@ methods: {
  handleSubmitFormEdit(button) {
    var app = this
    var newCategory = {
-    'name': this.categoryName
+    'name': this.category.name
   };
   
   if(app.isCreate) {
     axios.post('/api/categoriesaudio', newCategory).then(
       function(resp) {  
         app.categories.push(resp.data)
-        app.totalRows = app.categories.length
+        app.totalRows++
       }).catch(function(resp) {
         console.log(resp)
       });
@@ -200,9 +202,9 @@ methods: {
       this.$refs.focusThis.focus()
     },
     resetModalCE() {
-      this.categoryName = ''
-      this.categoryId = ''
-      this.categoryIndex = ''
+      this.category.name = ''
+      this.category.id = ''
+      this.category.index = ''
     }
   }
 }

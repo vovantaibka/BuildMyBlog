@@ -10,17 +10,29 @@ use App\Message;
 
 class ChatRoomController extends Controller
 {
+    /**
+     * Get all messages
+     * 
+     * @return array[]
+     */
     public function getMessages()
     {
     	$messages = Message::with('user')->get();
+
     	$user = Auth::user();
 
-    	$data = array('userName' => $user->name,
+    	$data = array('user' => $user,
     		'messages' => $messages);
 
     	return $data;
     }
 
+    /**
+     * Store a new message
+     * 
+     * @param  Request $request
+     * @return array[]
+     */
     public function storeMessage(Request $request)
     {	
     	$user = Auth::user();

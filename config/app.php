@@ -182,7 +182,8 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         //Francy
-        Intervention\Image\ImageServiceProvider::class
+        Intervention\Image\ImageServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class
     ],
 
     /*
@@ -235,7 +236,9 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
 
         //Francy
-        'Image' => Intervention\Image\Facades\Image::class
+        'Image' => Intervention\Image\Facades\Image::class,
+        'Pusher' => Pusher\Pusher::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class
     ],
 
 ];

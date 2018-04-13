@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Support\Facades\Log;
 use App\User;
 use Session;
 use Image;
@@ -53,7 +55,9 @@ class AccountController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = User::find($id);
+
+        return $user;
     }
 
     /**
@@ -64,8 +68,7 @@ class AccountController extends Controller
      */
     public function edit($id)
     {
-        $user = Auth::user();
-        return view('account.index')->withUser($user);
+        //
     }
 
     /**
@@ -94,21 +97,11 @@ class AccountController extends Controller
         $user->address = $request->input('address');
         $user->phone = $request->input('phone');
 
-        if($request->hasFile('profile_image')) {
-            $image = $request->file('profile_image');
-            $filename = time() . '.' . $image->getClientOriginalExtension();
-            $location = public_path('imgs/' . $filename);
-            Image::make($image)->widen(200)->save($location);
-            $oldFilename = $user->image;
-            $user->image = $filename;
-            Storage::delete($oldFilename);
-        }
-
         $user->save();
 
-        Session::flash('success', 'You have successfully updated your profile information');
+        // Session::flash('success', 'You have successfully updated your profile information');
 
-        return redirect()->route('account.edit', $user->id);
+        return $user;
     }
 
     /**
@@ -122,8 +115,38 @@ class AccountController extends Controller
         //
     }
 
-    public function changePassword()
+    // public function changePassword()
+    // {
+    //     die();
+    // }
+
+    /**
+     * [uploadImageFile description]
+     * @param  Request $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function uploadImageFile(Request $request, $id)
     {
-        die();
+        $user = User::find($id);
+
+        // $this->validate($request, [
+        //     'image' => 'required|image'
+        // ]);
+
+        if($request->get('image')) {
+            $image = $request->get('image');
+            $fileImageName = time().'.' . explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
+            \Image::make($request->get('image'))->heighten(200)->save(public_path('imgs/').$fileImageName);
+            $oldFilename = $user->image;
+            $user->image = $fileImageName;
+            Storage::delete($oldFilename);
+
+            $user->save();
+
+            return response()->json(['error' => false, 'fileImageName' => $fileImageName]); 
+        } else {
+            return response()->json(['errors' => true]);
+        }
     }
 }

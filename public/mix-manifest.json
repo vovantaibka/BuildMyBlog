@@ -4,6 +4,5 @@
   "/css/styles.css": "/css/styles.css",
   "/css/tests.css": "/css/tests.css",
   "/css/admin-styles.css": "/css/admin-styles.css",
-  "/js/admin-app.js": "/js/admin-app.js",
-  "/js/router-vue.js": "/js/router-vue.js"
+  "/js/admin-app.js": "/js/admin-app.js"
 }

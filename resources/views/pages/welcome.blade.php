@@ -56,7 +56,9 @@
                         {{--<li><a href="{{ route('categories.index') }}">Categories</a></li>--}}
                         <li><a href="{{ route('admin.main') }}">Management</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="{{ route('account.edit', Auth::user()->id) }}">Account Info</a></li>
+                        <li>
+                            <router-link class="" to="/profile-user/{{ Auth::user()->id }}">Account Info</router-link>
+                        </li>
                         <li>
                             <a href="{{ route('logout') }}"
                             onclick="event.preventDefault();
@@ -266,7 +268,7 @@
     </div>
 </div>
 
-<div>
+<div class="main-app">
     <router-view></router-view>
 </div>
 @endsection

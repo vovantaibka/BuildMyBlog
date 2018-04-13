@@ -13,15 +13,18 @@ class CreateAudiosTable extends Migration
      */
     public function up()
     {
-        Schema::connection('mysql_2')->create('audios', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('title');
-            $table->string('link')->unique();
-            $table->text('introduce');
-            $table->text('transcript')->nullable();
-            $table->string('image')->nullable();
-            $table->timestamps();
-        });
+        if(!Schema::connection('mysql_2')->hasTable('audios'))
+        {
+            Schema::connection('mysql_2')->create('audios', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('title');
+                $table->string('link')->unique();
+                $table->text('introduce');
+                $table->text('transcript')->nullable();
+                $table->string('image')->nullable();
+                $table->timestamps();
+            });
+        }
     }
 
     /**
@@ -31,6 +34,6 @@ class CreateAudiosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('audios');
+        Schema::connection('mysql_2')->dropIfExists('audios');
     }
 }

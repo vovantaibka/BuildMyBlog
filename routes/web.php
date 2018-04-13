@@ -15,38 +15,60 @@ use App\Message;
 Route::get('/', 'PagesController@getIndex');
 Route::get('/home', 'HomeController@index');
 
-Route::group(['middleware' => ['auth']], function() {
-    Route::get('/messages', 'ChatRoomController@getMessages');
-
-    Route::post('/messages', 'ChatRoomController@storeMessage');
-});
-
 Route::group(['namespace' => 'Test'], function () {
+    // Test urls
     Route::get('test/map', 'TestController@testGoogleMapApi');
     Route::get('test/zoom-image', 'TestController@testZoomImage');
     Route::get('test/jquery', 'TestController@testJQuery');
     Route::get('test/pagerank', 'TestController@getPagerank');
     Route::get('test/vue', 'TestController@getVueComponent');
     Route::get('test/router-vue', 'TestController@getRouterVue');
+    Route::get('test/pretreatment-comment', 'TestController@pretreatmentComment');
+});
+
+Route::group(['prefix' => 'api', 'namespace' => 'Api'], function () {
+    Route::get('admin/list/{object?}', 'AdminController@getListObject');
+    Route::get('admin/{object}/{id}', 'AdminController@viewObject');
+    Route::delete('admin/delete/{object}/{id}', 'AdminController@deleteObject');
+
+    Route::get('admin/listenandread/category/{categoryId}', 'EnglishController@getIndexWithCategory');
+
+    //Website Crawler
+    Route::post('crawlersite', 'CrawlerController@getUrlData');
+
+    Route::get('evaluateComment', 'CrawlerController@evaluateComment');
+
+    Route::resource('post', 'PostController', ['except' => ['create', 'edit']]);
+
+    Route::resource('categoriesaudio', 'CategoryAudioController', ['except' => ['create', 'edit']]);
+
+    Route::resource('audio', 'AudioController', ['except' => ['create', 'edit']]);
+});
+
+Route::group(['namespace' => 'File'], function() {
+    Route::get('import-emotional-dictionary-to-db', 'ExcelProcessing@importEmotionalDictionaryToDB');
+    Route::get('import-vietnamese-stopwords', 'TxtProcessing@importVietnameseStopwords');
+});
+
+Route::group(['middleware' => ['web', 'auth']], function() {
+    // Account
+    Route::resource('account', 'AccountController', ['except' => ['create', 'edit']]);
+
+    Route::put('upload-image-file/{id}', 'AccountController@uploadImageFile');
+
+    Route::get('messages', 'ChatRoomController@getMessages');
+    Route::post('messages', 'ChatRoomController@storeMessage');
 });
 
 Route::group(['middleware' => ['web']], function () {
-
-    // Authentication Routes
-    // Route::get('auth/login', 'AuthController@getLogin');
-    // Route::get('auth/register', 'AuthController@getRegister');
-
     // Categories
-    Route::resource('categories', 'CategoryController', ['except' => ['create']]);
+    Route::resource('categories', 'CategoryController', ['except' => ['create', 'edit']]);
 
     // Tags
     Route::resource('tags', 'TagController', ['except' => ['create']]);
 
     // Posts
     Route::resource('posts', 'PostController');
-
-    // Account
-    Route::resource('account', 'AccountController');
     
     Route::put('account/{id}', ['uses' => 'AccountController@changePassword', 'as' => 'account.changepw']);
 
@@ -86,23 +108,6 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/vue/{vue_capture?}', function () {
         return view('vue.index');
     })->where('vue_capture', '[\/\w\.-]*');
-});
-
-
-
-Route::group(['prefix' => 'api', 'namespace' => 'Api'], function () {
-    Route::get('admin/list/{object?}', 'AdminController@getListObject');
-    Route::get('admin/{object}/{id}', 'AdminController@viewObject');
-    Route::delete('admin/delete/{object}/{id}', 'AdminController@deleteObject');
-
-    Route::get('admin/listenandread/category/{categoryId}', 'EnglishController@getIndexWithCategory');
-
-    //Website Crawler
-    Route::post('crawlersite', 'CrawlerController@getUrlData');
-
-    Route::resource('categoriesaudio', 'CategoryAudioController', ['except' => ['create', 'edit']]);
-
-    Route::resource('audio', 'AudioController', ['except' => ['create', 'edit']]);
 });
 
 Auth::routes();

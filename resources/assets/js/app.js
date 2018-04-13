@@ -19,6 +19,7 @@ const HomePage = Vue.component('home-page', require('./components/HomePage.vue')
 const BlogPage = Vue.component('blog-page', require('./components/BlogPage.vue'));
 const AboutPage = Vue.component('about-page', require('./components/AboutPage.vue'));
 const ListenEnglishPage = Vue.component('listen-page', require('./components/ListenEnglishPage.vue'));
+const ProfileUserPage = Vue.component('profile-user-page', require('./components/ProfileUserPage.vue'))
 
 const ChatRoomPage = Vue.component('chat-room-page', require('./components/chatroom/ChatRoomPage.vue'));
 const ChatMessage = Vue.component('chat-message', require('./components/chatroom/ChatMessage.vue'));
@@ -34,30 +35,39 @@ const router = new VueRouter({
 		},
 		{
 			path: '/home',
-			name: 'home-page',
+			name: 'home',
 			component: HomePage,
 		},
 		{
 			path: '/blog',
-			name: 'blog-page',
+			name: 'blog',
 			component: BlogPage
 		},
 		{
 			path: '/listen-english',
-			name: 'listen-page',
+			name: 'listen',
 			component: ListenEnglishPage
 		},
 		{
 			path: '/about',
-			name: 'about-page',
+			name: 'about',
 			component: AboutPage
 		},
 		{
 			path: '/chat-room',
-			name: 'chat-room-page',
+			name: 'chat-room',
 			component: ChatRoomPage
+		},
+		{
+			path: '/profile-user/:userId',
+			name: 'profile-user',
+			component: ProfileUserPage
 		}
 	]
+});
+
+Vue.filter('getImgsUrl', function (value) {
+    return imgsUrl + "/" + value;
 });
 
 /**
@@ -65,8 +75,6 @@ const router = new VueRouter({
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-
-Vue.component('example', require('./components/Example.vue'));
 
 const app = new Vue({
 	router

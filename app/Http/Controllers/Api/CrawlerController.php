@@ -5,17 +5,24 @@ namespace App\Http\Controllers\Api;
 use GuzzleHttp\Exception\ConnectException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Goutte\Client;
 use GuzzleHttp\Client as GuzzleClient;
 use Storage;
+use File;
+use Symfony\Component\DomCrawler\Crawler;
 use paslandau\PageRank\Import\CsvImporter;
 use paslandau\PageRank\Calculation\PageRank;
 use paslandau\PageRank\Calculation\ResultFormatter;
-
+use App\Search;
+use App\SearchComment;
+use App\EmotionalDictionary;
+use App\VietnameseStopword;
 
 class CrawlerController extends Controller
 {
-    const CountNode = 15000; // Tổng số nút sẽ duyệt qua
+    const CountNode = 100; // Tổng số nút sẽ duyệt qua
     const BaseUrlWiki = "https://vi.wikipedia.org";
 
     private $goutteClient;
@@ -27,6 +34,9 @@ class CrawlerController extends Controller
     public $linkedPages = array(); // Chứa tất cả hyperlink wiki vn của trang hiện tại
     public $urls = array(); // Chứa tất cả những url đã tìm ra
     public $url;
+
+    public $categoriesLink = array();
+    public $searches = array();
 
     public function __construct()
     {
@@ -74,6 +84,7 @@ class CrawlerController extends Controller
         }
     }
 
+    // Hàm lấy ra tất cả hyperlinks từ url đưa vào
     public function getUrlsWikiLinked($url)
     {
         $crawler = $this->goutteClient->request('GET', $url);
@@ -108,6 +119,7 @@ class CrawlerController extends Controller
         }
     }
     
+    // Tính toán pagerank từ file csv có cấu trúc định sẵn
     public function getPageRank()
     {
         $hasHeader = true;
@@ -137,19 +149,17 @@ class CrawlerController extends Controller
     }
 
     /**
-     * [getUrlData description]
-     * @param  Request $request [description]
-     * @return [json]           [Array crawled urls]
+     * Lấy dữ liệu về các Url từ startUrl
+     * @param  Crawler $crawler
+     * @param  string  $startUrl
+     * @return [type]            [description]
      */
-    public function getUrlData(Request $request)
+    public function getDataTypeUrl(Crawler $crawler, $startUrl)
     {
-        $startUrl = $request->entrypoint;
-        $crawler = $this->goutteClient->request('GET', $startUrl);
-
         $title = $crawler->filter('h1#firstHeading')->html();
 
         $this->urls[] = $startUrl;
-        $this->f = fopen("count-node-100000.csv", "a+");
+        $this->f = fopen("count-node-100.csv", "a+");
 
         fputcsv($this->f, ["linkFrom", "linkTo"]);
 
@@ -212,13 +222,247 @@ class CrawlerController extends Controller
         }
 
         fclose($this->fResult);
+    }
 
-        $result = "OK";
+    /**
+     * Lấy dữ liệu về các Comment từ startUrl
+     * @param  Crawler $crawler  [description]
+     * @param  [type]  $startUrl [description]
+     * @return [type]            [description]
+     */
+    public function getDataTypeComment(Crawler $crawler, $startUrl)
+    {
+        $this->searches = array();
+        try {
+            if($crawler->filter('nav.categories > ul')->filter('li.parent')->filter('a')->count() > 0)
+            {
+                // Mảng categoriesLink chứa các link category của trang news.zing.vn
+                $this->categoriesLink = array();
+                $crawler->filter('nav.categories > ul')->filter('li.parent')->filter('a')->each(function($node) {
+                    $this->categoriesLink[] = $node->attr('href');
+                });
+
+                // Lấy 20 link category đầu tiên của mảng
+                // array_splice($this->categoriesLink, 20);
+
+                foreach ($this->categoriesLink as $categoryLink => $value) {
+                    // Vào từng category của trang news.zing.vn
+                    $crawler = $this->goutteClient->request('GET', $value);
+
+                    // Lấy ra link các bài viết trong từng category
+                    if($crawler->filter('section.cate_sidebar')->filter('section.mostread')->filter('article')->filter('p.title')->filter('a')->count() > 0)
+                    {
+                        $crawler->filter('section.cate_sidebar')->filter('section.mostread')->filter('article')->filter('p.title')->filter('a')->each(function($node) {
+                            $crawler = $this->goutteClient->request('GET', $node->attr('href'));
+
+                            $user = Auth::user();
+                            $search = new Search;
+
+                            $search->type = 'comment';
+                            $search->entrypoint = 'https://news.zing.vn' . $node->attr('href');
+                            $search->user_id = $user->id;
+                            $search->finished = 0;
+
+                            $search->save();
+
+                            $finished = 0;
+
+
+                            // Lấy ra id của bài viết
+                            $articleId = $crawler->filter("article")->attr('article-id');
+
+                            $res = $this->guzzleClient->request('GET', 'https://api.news.zing.vn/api/comment.aspx?action=get&id=' . $articleId)->getBody();
+
+                            $comments = json_decode($res->getContents())->comments;
+
+                            for ($i=0; $i < count($comments); $i++) {
+                                $contentComment = $comments[$i]->Comment;
+
+                                if(strlen($contentComment) > 50) {
+                                    $comment = new SearchComment;
+
+                                    $comment->comment = $contentComment;
+
+                                    $comment->user()->associate(Auth::user()->id);
+                                    $comment->search()->associate($search);
+
+                                    $comment->save();
+                                }
+                            }
+
+                            $search->finished = 1;
+                            $search->save();
+
+                            $this->searches[] = $search;
+                        });
+                    }
+                }
+            }
+        } catch(\InvalidArgumentException $e) {
+            Log::debug($e->getMessage());
+        } catch(\Exception $e) {
+            Log::debug($e->getMessage());
+        }
+    }
+
+    /**
+     * Tiền xử lý comment
+     * @param  string $comment
+     * @return array [Mảng các từ key trong comment sau giai đoạn tiền xử lý]
+     */
+    public function pretreatmentComment($comment)
+    {
+        // Tách câu
+        $sentences = explode('.', $comment);
+
+        $segments = array();
         
-        return response()->json(array(
-            'result' => $result
-        ));
+        // Tách dấu câu
+        foreach ($sentences as $key => $sentence) {
+            if(!empty($sentence)) {
+                $array = explode(',', $sentence);
+                $segments = array_merge($segments, $array);
+            }
+        }
+
+        $arr = array();
+
+        foreach ($segments as $key => $segment) {
+            try {
+                if(strlen($segment) > 0 & preg_match('/[a-z]|[A-Z]/', $segment)) {
+                    // Thực hiện tách từ bằng việc gọi đến API viết bằng java sử dụng vn_tokenizer
+                    $res = $this->guzzleClient->request('GET', 'http://localhost:8080/rest_glassfish_vn_tokenizer_war_exploded/api/v2/vn_tokenizer/' . trim($segment));
+                    $contents = $res->getBody()->getContents();
+                    if($contents !== "[]")
+                    {
+                        $content = explode(',', $contents);
+
+                        foreach ($content as $key => $value) {
+                            // Lấy từng từ đã tách
+                            $word = explode(';', $value)[1];
+
+                            // Loại bỏ chữ số
+                            if(!preg_match('/[0-9]|["]/', $word)) {
+                                $word = strtolower($word);
+
+                                $arrWord = explode('_', $word);
+                                $word = implode(' ', $arrWord);
+
+                                // Chuyển thành chữ thường
+                                $arr[] = $word;           
+                            }
+                        }
+                    }
+                }
+            } catch(ClientException $e) {
+
+            } catch(Exception $e) {
+
+            }
+            
+        }
+
+        return $arr;
+    }
+
+    /**
+     * Loại bỏ từ dừng trong mảng các từ tham số đưa vào
+     * @param  array $comments [ Mảng chứ danh sách từ key trong comment ]
+     * @return array
+     */
+    public function stopwordsDelete($words)
+    {
+        $result = array();
+        foreach ($words as $word) {
+            $stopword = VietnameseStopword::where('word', $word)->first();
+            if(is_null($stopword))
+            {
+                $result[] = $word; // Nếu từ không phải từ dừng thì thêm vào mảng kq trả về
+            }
+        }
+        return $result;
+    }
+
+
+    /**
+     * Tính điểm của comment
+     * @param  [array] $words [ Danh sách các từ key trong comment ]
+     * @return [int]        [ Điểm đánh gía comment ]
+     */
+    public function scoreComment($words)
+    {
+        $scorePos = 0;
+        $scoreNeg = 0;
+
+        foreach ($words as $word) {
+            $emotionalDictionary = EmotionalDictionary::where('vietnamese', $word)->first();
+            if(!is_null($emotionalDictionary)) {
+                $scorePos += $emotionalDictionary->positive;
+                $scoreNeg += $emotionalDictionary->negative;
+            }
+        }
+        $score = [
+            "positive" => $scorePos,
+            "negative" => $scoreNeg
+        ];
+        return $score;
+    }
+
+    /**
+     * Đánh gía các comment
+     * @return [type] [description]
+     */
+    public function evaluateComment()
+    {
+        echo  "ID Postive_score Negative_score Content</br>";
+
+        SearchComment::chunk(200, function ($comments) {
+            foreach ($comments as $comment) {
+                if(!in_array($comment->id, [1])) {
+                    echo $comment->id . " ";
+                    $words = $this->pretreatmentComment(trim($comment->comment));
+                    $words = $this->stopwordsDelete($words);
+                    $score = $this->scoreComment($words);
+                    echo $score['positive'] . " ";
+                    echo $score['negative'] . " ";
+                    echo $comment->comment . "</br>";
+                }
+            }
+        });
+    }
+
+    /**
+     * Hàm lấy dữ liệu từ Url đưa vào
+     * @param  Request $request
+     * @return Response [Array crawled urls]
+     */
+    public function getUrlData(Request $request)
+    {
+        // https://vi.wikipedia.org/wiki/Qu%E1%BA%A7n_%C4%91%E1%BA%A3o_Sunda_Nh%E1%BB%8F
+        $startUrl = $request->entrypoint;
+        $crawler = $this->goutteClient->request('GET', $startUrl);
+
+        switch ($request->type) {
+            case 'url':
+            $this->getDataTypeUrl($crawler, $startUrl);
+            break;
+
+            case 'email':
+                # code...
+            break;
+
+            case 'comment':
+            $this->getDataTypeComment($crawler, $startUrl);
+            break;
+            
+            default:
+                # code...
+            break;
+        }
+        
+        return response()->json([
+            'searches' => $this->searches
+        ]);
     }
 }
 
-// https://vi.wikipedia.org/wiki/Qu%E1%BA%A7n_%C4%91%E1%BA%A3o_Sunda_Nh%E1%BB%8F

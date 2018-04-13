@@ -27,6 +27,7 @@
 <!-- Script -->
 <script type="text/javascript">
 	var baseUrl = '{{ url('/') }}';
+    var imgsUrl = '{{ url('/imgs') }}';
 </script>
 <script src="{{ asset('js/app.js') }}"></script>
 </body>
