@@ -38,6 +38,8 @@ class CrawlerController extends Controller
     public $categoriesLink = array();
     public $searches = array();
 
+    public $index = 0;
+
     public function __construct()
     {
         $this->goutteClient = new Client();
@@ -338,11 +340,14 @@ class CrawlerController extends Controller
                         $content = explode(',', $contents);
 
                         foreach ($content as $key => $value) {
+                            // Lấy ra loại từ
+                            $lem = substr(explode('}', explode(';', $value)[2])[0], 5);
+
                             // Lấy từng từ đã tách
                             $word = explode(';', $value)[1];
 
                             // Loại bỏ chữ số
-                            if(!preg_match('/[0-9]|["]/', $word)) {
+                            if(in_array($lem, ['CAPITAL', 'WORD'])) { // Kiểm tra xem từ đó có phải WORD không?
                                 $word = strtolower($word);
 
                                 $arrWord = explode('_', $word);
@@ -376,7 +381,7 @@ class CrawlerController extends Controller
         foreach ($words as $word) {
             $stopword = VietnameseStopword::where('word', $word)->first();
             if(is_null($stopword))
-            {
+            {   
                 $result[] = $word; // Nếu từ không phải từ dừng thì thêm vào mảng kq trả về
             }
         }
@@ -414,18 +419,22 @@ class CrawlerController extends Controller
      */
     public function evaluateComment()
     {
+        $this->index = 0;
         echo  "ID Postive_score Negative_score Content</br>";
-
         SearchComment::chunk(200, function ($comments) {
             foreach ($comments as $comment) {
-                if(!in_array($comment->id, [1])) {
-                    echo $comment->id . " ";
+                if(strlen($comment->comment) > 150) {
+                    $this->index++;
+                    echo $this->index . " ";
                     $words = $this->pretreatmentComment(trim($comment->comment));
                     $words = $this->stopwordsDelete($words);
                     $score = $this->scoreComment($words);
                     echo $score['positive'] . " ";
                     echo $score['negative'] . " ";
                     echo $comment->comment . "</br>";
+                }
+                if($this->index == 1000) {
+                    dd();
                 }
             }
         });

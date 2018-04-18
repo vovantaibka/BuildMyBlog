@@ -23,7 +23,7 @@ export default {
 	],
 	data: function() {
 		return {
-			image: imgsUrl + "/" + this.message.user.image
+			image: this.message.user.image
 		}
 	}
 }

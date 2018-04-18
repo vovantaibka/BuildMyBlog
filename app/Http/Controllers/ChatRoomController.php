@@ -21,8 +21,17 @@ class ChatRoomController extends Controller
 
     	$user = Auth::user();
 
-    	$data = array('user' => $user,
-    		'messages' => $messages);
+        $users = User::with(['messages' => function ($query) {
+                        $query->orderBy('created_at', 'desc')->first();}])
+                    ->where('id', '<>', $user->id)
+                    ->orderBy('name', 'desc')
+                    ->get();
+
+    	$data = array(
+            'user' => $user,
+            'contacts' => $users,
+    		'messages' => $messages
+        );
 
     	return $data;
     }

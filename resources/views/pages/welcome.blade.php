@@ -39,9 +39,11 @@
             <li class="">
                 <router-link class="" :to="{ path: '/about' }"><strong>About</strong></router-link>
             </li>
-            <li class="">
-                <router-link class="" :to="{ path: '/chat-room' }"><strong>Chat Room</strong></router-link>
-            </li>
+            @if(Auth::check())
+                <li class="">
+                    <router-link class="" :to="{ path: '/chat-room' }"><strong>Chat Room</strong></router-link>
+                </li>
+            @endif
         </ul>
         <ul class="nav navbar-nav navbar-right">
             @if(Auth::check())

@@ -18,7 +18,13 @@ class EventServiceProvider extends ServiceProvider
         ],
         'App\Events\ViewPost' => [
             'App\Listeners\ViewPostHandler'
-        ]
+        ],
+        'Illuminate\Auth\Events\Login' => [
+            'App\Listeners\LogSuccessfulLogin',
+        ],
+        'Illuminate\Auth\Events\Logout' => [
+            'App\Listeners\LogSuccessfulLogout',
+        ],
     ];
 
     /**

@@ -10,7 +10,6 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
-use Illuminate\Support\Facades\Log;
 use App\Message;
 use App\User;
 
@@ -48,7 +47,7 @@ class MessagePosted implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
-        return new PresenceChannel('chatroom');
+        return new PresenceChannel('Chatroom');
     }
 
     /**

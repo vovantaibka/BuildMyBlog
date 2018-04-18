@@ -46,4 +46,12 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Comment');
     }
+
+    /**
+     *  ***
+     */
+    public function getImageAttribute($value)
+    {
+        return url('/imgs/' . $value);
+    }
 }

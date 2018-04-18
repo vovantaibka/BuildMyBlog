@@ -1,7 +1,7 @@
 <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 nav-admin">
   <div class="profile-img">
     <a href="/">
-      <img src="{{ asset('imgs/' . Auth::user()->image) }}" class="" alt="Profile Image">
+      <img src="{{ Auth::user()->image }}" class="" alt="Profile Image">
     </a>
   </div>
   <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="{{ route('admin.main', 'home') }}">{{ Auth::user()->name }}</a>

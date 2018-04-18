@@ -186,11 +186,17 @@ class TestController extends Controller
         $score = 0;
         Excel::load('Assignment02/Test.xlsx', function($reader) {
             $results = $reader->all();
-            $results
             // foreach ($results as $result) {
             //     echo $result->english . "</br>";
             // }
         });
         return $score;
+    }
+
+    public function get600Toeic()
+    {
+        $url = "http://600tuvungtoeic.com/index.php?mod=practice&id=1&page=1";
+        $crawler = $this->goutteClient->request('GET', $url);
+        dd($crawler->filter('div.kiemtra2')->html());
     }
 }

@@ -15,6 +15,14 @@ Broadcast::channel('App.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
 
-Broadcast::channel('chatroom', function (User $user) {
+Broadcast::channel('Chatroom', function (User $user) {
     return $user;
+});
+
+Broadcast::channel('App.User.Login', function ($userId) {
+    return $userId;
+});
+
+Broadcast::channel('App.User.Logout', function ($userId) {
+    return $userId;
 });

@@ -24,6 +24,7 @@ Route::group(['namespace' => 'Test'], function () {
     Route::get('test/vue', 'TestController@getVueComponent');
     Route::get('test/router-vue', 'TestController@getRouterVue');
     Route::get('test/pretreatment-comment', 'TestController@pretreatmentComment');
+    Route::get('test/600-toeic', 'TestController@get600Toeic');
 });
 
 Route::group(['prefix' => 'api', 'namespace' => 'Api'], function () {
