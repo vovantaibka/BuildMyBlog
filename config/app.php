@@ -183,7 +183,10 @@ return [
 
         //Francy
         Intervention\Image\ImageServiceProvider::class,
-        Maatwebsite\Excel\ExcelServiceProvider::class
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+
+        //Custom service defined...
+        App\Providers\PostServiceProvider::class,
     ],
 
     /*
@@ -238,7 +241,9 @@ return [
         //Francy
         'Image' => Intervention\Image\Facades\Image::class,
         'Pusher' => Pusher\Pusher::class,
-        'Excel' => Maatwebsite\Excel\Facades\Excel::class
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+
+        'Post' => App\Facades\Post::class,
     ],
 
 ];

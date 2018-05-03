@@ -52,6 +52,11 @@ Route::group(['namespace' => 'File'], function() {
 });
 
 Route::group(['middleware' => ['web', 'auth']], function() {
+    Route::group(['prefix' => 'master', 'middleware' => 'master', 'namespace' => 'Master'], function() {
+        // Manage post
+        Route::get('post', 'PostController@postList')->name('master.post.list');
+    });
+
     // Account
     Route::resource('account', 'AccountController', ['except' => ['create', 'edit']]);
 
@@ -70,7 +75,7 @@ Route::group(['middleware' => ['web']], function () {
 
     // Posts
     Route::resource('posts', 'PostController');
-    
+
     Route::put('account/{id}', ['uses' => 'AccountController@changePassword', 'as' => 'account.changepw']);
 
     // Admin
