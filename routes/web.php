@@ -1,5 +1,5 @@
 <?php
-use App\Message;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -46,13 +46,13 @@ Route::group(['prefix' => 'api', 'namespace' => 'Api'], function () {
     Route::resource('audio', 'AudioController', ['except' => ['create', 'edit']]);
 });
 
-Route::group(['namespace' => 'File'], function() {
+Route::group(['namespace' => 'File'], function () {
     Route::get('import-emotional-dictionary-to-db', 'ExcelProcessing@importEmotionalDictionaryToDB');
     Route::get('import-vietnamese-stopwords', 'TxtProcessing@importVietnameseStopwords');
 });
 
-Route::group(['middleware' => ['web', 'auth']], function() {
-    Route::group(['prefix' => 'master', 'middleware' => 'master', 'namespace' => 'Master'], function() {
+Route::group(['middleware' => ['web', 'auth']], function () {
+    Route::group(['prefix' => 'master', 'middleware' => 'master', 'namespace' => 'Master'], function () {
         // Manage post
         Route::get('post', 'PostController@postList')->name('master.post.list');
     });

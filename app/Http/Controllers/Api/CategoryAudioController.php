@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\CategoryAudio;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 class CategoryAudioController extends Controller
 {
@@ -16,6 +16,7 @@ class CategoryAudioController extends Controller
     public function index()
     {
         $categories = CategoryAudio::all();
+
         return $categories;
     }
 
@@ -32,12 +33,13 @@ class CategoryAudioController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        $category = new CategoryAudio;
+        $category = new CategoryAudio();
 
         $category->name = $request->name;
 
@@ -49,7 +51,8 @@ class CategoryAudioController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -60,7 +63,8 @@ class CategoryAudioController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -71,8 +75,9 @@ class CategoryAudioController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -91,13 +96,15 @@ class CategoryAudioController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
         $category = CategoryAudio::find($id);
         $category->delete();
+
         return '';
     }
 }

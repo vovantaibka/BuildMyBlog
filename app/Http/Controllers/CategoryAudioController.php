@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 use App\CategoryAudio;
+use Illuminate\Http\Request;
 use Session;
 
 class CategoryAudioController extends Controller
@@ -32,32 +31,32 @@ class CategoryAudioController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if($request->action === "create") {
-
-            $category = new CategoryAudio;
+        if ($request->action === 'create') {
+            $category = new CategoryAudio();
 
             $category->name = $request->name;
 
             $category->save();
 
             Session::flash('success', 'New Category of Audio has been created');
-
-
         } else {
-            $this->update($request, $request->category_id);  
+            $this->update($request, $request->category_id);
         }
+
         return redirect()->route('admin.main', 'category_audio');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -68,7 +67,8 @@ class CategoryAudioController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -79,8 +79,9 @@ class CategoryAudioController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -98,7 +99,8 @@ class CategoryAudioController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

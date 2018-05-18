@@ -2,33 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use GuzzleHttp\Exception\ConnectException;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Goutte\Client;
 use GuzzleHttp\Client as GuzzleClient;
-use Storage;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 
 class CrawlerController extends Controller
 {
     const CountNode = 1000; // Tổng số nút sẽ duyệt qua
-    const BaseUrlWiki = "https://vi.wikipedia.org";
+    const BaseUrlWiki = 'https://vi.wikipedia.org';
 
     private $goutteClient;
     private $guzzleClient;
     private $f;
 
-    public $crawledUrls = array(); // Chứa Info của tất cả những trang đã crawler
-    public $linkedPages = array(); // Chứa tất cả hyperlink wiki vn của trang hiện tại
-    public $urls = array(); // Chứa tất cả những url đã tìm ra
+    public $crawledUrls = []; // Chứa Info của tất cả những trang đã crawler
+    public $linkedPages = []; // Chứa tất cả hyperlink wiki vn của trang hiện tại
+    public $urls = []; // Chứa tất cả những url đã tìm ra
     public $url;
 
     public function __construct()
     {
         $this->goutteClient = new Client();
-        $this->guzzleClient = new GuzzleClient(array(
+        $this->guzzleClient = new GuzzleClient([
             'timeout' => 60,
-        ));
+        ]);
         $this->goutteClient->setClient($this->guzzleClient);
     }
 
@@ -37,7 +35,7 @@ class CrawlerController extends Controller
     {
         $crawler = $this->goutteClient->request('GET', $url);
 
-        $this->linkedPages = array();
+        $this->linkedPages = [];
         $this->url = $url;
 
         try {
@@ -45,7 +43,7 @@ class CrawlerController extends Controller
                 $crawler->filter('div#bodyContent')->filter('a')->each(function ($node) {
                     $link = $node->selectlink($node->text())->link();
                     $linkUrl = $link->getUri();
-                    if (!strpos($linkUrl, "#")) {
+                    if (!strpos($linkUrl, '#')) {
                         if (strpos($linkUrl, self::BaseUrlWiki) === 0) {
                             if (!in_array($linkUrl, $this->linkedPages)) {
                                 $this->linkedPages[] = $linkUrl;
@@ -67,7 +65,7 @@ class CrawlerController extends Controller
     {
         $crawler = $this->goutteClient->request('GET', $url);
 
-        $this->linkedPages = array();
+        $this->linkedPages = [];
         $this->url = $url;
 
         try {
@@ -75,7 +73,7 @@ class CrawlerController extends Controller
                 $crawler->filter('div#bodyContent')->filter('a')->each(function ($node) {
                     $link = $node->selectlink($node->text())->link();
                     $linkUrl = $link->getUri();
-                    if (!strpos($linkUrl, "#")) {
+                    if (!strpos($linkUrl, '#')) {
                         if (strpos($linkUrl, self::BaseUrlWiki) === 0) {
                             if (!in_array($linkUrl, $this->linkedPages) && (in_array($linkUrl, $this->urls))) {
                                 $this->linkedPages[] = $linkUrl;
@@ -97,15 +95,15 @@ class CrawlerController extends Controller
 
         $title = $crawler->filter('h1#firstHeading')->html();
 
-        $crawlerStartUrl = array(
-            'title' => $title,
-            'impactFactor' => 1
-        );
+        $crawlerStartUrl = [
+            'title'        => $title,
+            'impactFactor' => 1,
+        ];
 
         $this->crawledUrls[$startUrl] = $crawlerStartUrl;
 
-        $this->f = fopen("url-crawled.csv", "a+");
-        fputcsv($this->f, ["linkFrom", "linkTo"]);
+        $this->f = fopen('url-crawled.csv', 'a+');
+        fputcsv($this->f, ['linkFrom', 'linkTo']);
 
         $this->getUrlsWiki($startUrl);
 
@@ -123,10 +121,10 @@ class CrawlerController extends Controller
             if (array_key_exists($nextUrl, $this->crawledUrls)) {
                 $this->crawledUrls[$nextUrl]['impactFactor']++;
             } else {
-                $crawlerUrl = array(
-                    'title' => $pageTitle,
-                    'impactFactor' => 1
-                );
+                $crawlerUrl = [
+                    'title'        => $pageTitle,
+                    'impactFactor' => 1,
+                ];
                 $this->crawledUrls[$nextUrl] = $crawlerUrl;
             }
 
@@ -142,6 +140,7 @@ class CrawlerController extends Controller
         }
 
         fclose($this->f);
+
         return view('admin.crawler.tool');
     }
 }

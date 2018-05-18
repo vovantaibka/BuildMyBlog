@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-
-use App\Http\Requests;
 use App\Comment;
 use App\Post;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Session;
 
 class CommentsController extends Controller
@@ -43,16 +41,17 @@ class CommentsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request, $post_id)
     {
-        $this->validate($request, array(
-            'name' => 'required|max:255',
-            'email' => 'required|email|max:255',
-            'comment' => 'required|min:5|max:2000'
-        ));
+        $this->validate($request, [
+            'name'    => 'required|max:255',
+            'email'   => 'required|email|max:255',
+            'comment' => 'required|min:5|max:2000',
+        ]);
 
         $post = Post::find($post_id);
 
@@ -73,7 +72,8 @@ class CommentsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -84,27 +84,30 @@ class CommentsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
         $comment = Comment::find($id);
+
         return view('comments.edit')->withComment($comment);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, array(
-            'comment' => 'required|min:5|max:2000'
-        ));
+        $this->validate($request, [
+            'comment' => 'required|min:5|max:2000',
+        ]);
 
         $comment = Comment::find($id);
 
@@ -116,15 +119,18 @@ class CommentsController extends Controller
         return redirect()->route('posts.show', $comment->post->id);
     }
 
-    public function delete($id){
+    public function delete($id)
+    {
         $comment = Comment::find($id);
+
         return view('comments.delete')->withComment($comment);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

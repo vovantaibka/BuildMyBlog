@@ -23,8 +23,8 @@ class PostServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('post', function($app) {
-            return new \App\Services\Post;
+        $this->app->singleton('post', function ($app) {
+            return new \App\Services\Post();
         });
     }
 }

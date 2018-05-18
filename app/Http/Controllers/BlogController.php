@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
-// use Illuminate\Support\Facades\Log;
-use App\Post;
-use App\Category;
 use App\Audio;
+// use Illuminate\Support\Facades\Log;
+use App\Category;
 use App\CategoryAudio;
 use App\Events\ViewPost;
+use App\Post;
 use Carbon\Carbon;
+use Illuminate\Routing\Controller;
 
 class BlogController extends Controller
 {
@@ -19,12 +18,12 @@ class BlogController extends Controller
         $posts = Post::orderBy('created_at', 'desc')->limit(4)->get();
 
         foreach ($posts as $post) {
-            $post["url_single_post"] = '/blog/' . $post->slug;
-            $post["url_image_post"] = '/imgs/' . $post->image;
-            $post["user_name"] = $post->user->name;
-            $post["updated_at"] = Carbon::createFromFormat('Y-m-d H:i:s', $post->updated_at);
+            $post['url_single_post'] = '/blog/'.$post->slug;
+            $post['url_image_post'] = '/imgs/'.$post->image;
+            $post['user_name'] = $post->user->name;
+            $post['updated_at'] = Carbon::createFromFormat('Y-m-d H:i:s', $post->updated_at);
 
-            $post["title"] = substr($post->title, 0, 70) . (strlen($post->title) >= 70 ? "..." : "");
+            $post['title'] = substr($post->title, 0, 70).(strlen($post->title) >= 70 ? '...' : '');
         }
 
         $categories = Category::all();
@@ -37,8 +36,8 @@ class BlogController extends Controller
         $posts = Post::paginate(10);
 
         foreach ($posts as $post) {
-            $post['url_single_post'] = '/blog/' . $post->slug;
-            $post['url_image_post'] = '/imgs/' . $post->image;
+            $post['url_single_post'] = '/blog/'.$post->slug;
+            $post['url_image_post'] = '/imgs/'.$post->image;
             $post['user_name'] = $post->user->name;
             $post['updated_at'] = Carbon::createFromFormat('Y-m-d H:i:s', $post->updated_at);
         }
@@ -60,10 +59,10 @@ class BlogController extends Controller
             $audio->slug = $this->getSlug($audio->title);
         }
 
-        $response = array(
-            'audios' => $audios,
-            'categories' => $categories
-        );
+        $response = [
+            'audios'     => $audios,
+            'categories' => $categories,
+        ];
 
         return $response;
     }
@@ -73,10 +72,11 @@ class BlogController extends Controller
         $name = strtolower($name);
         $arr = explode(' ', $name);
         $slug = implode('-', $arr);
+
         return $slug;
     }
 
-    public function getSingle($slug)    
+    public function getSingle($slug)
     {
         $post = Post::where('slug', '=', $slug)->first();
 

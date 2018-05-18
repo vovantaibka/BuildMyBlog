@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Session\Store;
-use Session;
 
 class CheckViewPost
 {
@@ -18,16 +17,16 @@ class CheckViewPost
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure                 $next
+     *
      * @return mixed
      */
     public function handle($request, Closure $next)
     {
         $posts = $this->getViewedPosts();
 
-        if(!is_null($posts))
-        {
+        if (!is_null($posts)) {
             $posts = $this->cleanExpiredViews($posts);
             $this->storePosts($posts);
         }
@@ -46,8 +45,7 @@ class CheckViewPost
 
         $throttleTime = 600;
 
-        return array_filter($posts, function ($timestamp) use ($time, $throttleTime)
-        {
+        return array_filter($posts, function ($timestamp) use ($time, $throttleTime) {
             return ($timestamp + $throttleTime) > $time;
         });
     }

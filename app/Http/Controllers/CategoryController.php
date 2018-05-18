@@ -2,17 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Category;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-
-use Illuminate\Foundation\Validation\ValidatesRequests;
-
-use App\Category;
 use Session;
 
 class CategoryController extends Controller
 {
-
     use ValidatesRequests;
 
     public function __construct()
@@ -46,60 +43,65 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if($request->action === "create") {
-            $this->validate($request, array(
-                'name' => 'required|max:255'
-            ));
+        if ($request->action === 'create') {
+            $this->validate($request, [
+                'name' => 'required|max:255',
+            ]);
 
-            $category = new Category;
+            $category = new Category();
 
             $category->name = $request->name;
 
             $category->save();
 
             Session::flash('success', 'New Category has been created');
-
-
         } else {
-            $this->update($request, $request->category_id);  
+            $this->update($request, $request->category_id);
         }
+
         return redirect()->route('admin.main', 'category');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
         $category = Category::find($id);
+
         return view('categories.show')->withCategory($category);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
         $category = Category::find($id);
+
         return view('categories.edit')->withCategory($category);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -117,7 +119,8 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
