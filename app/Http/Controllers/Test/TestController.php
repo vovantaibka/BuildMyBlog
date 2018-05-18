@@ -2,18 +2,15 @@
 
 namespace App\Http\Controllers\Test;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use paslandau\PageRank\Import\CsvImporter;
-use paslandau\PageRank\Node;
-use paslandau\PageRank\Graph;
-use paslandau\PageRank\Edge;
-use paslandau\PageRank\Calculation\PageRank;
-use paslandau\PageRank\Calculation\ResultFormatter;
-use File;
 use Excel;
+use File;
 use Goutte\Client;
 use GuzzleHttp\Client as GuzzleClient;
+use paslandau\PageRank\Calculation\PageRank;
+use paslandau\PageRank\Calculation\ResultFormatter;
+use paslandau\PageRank\Import\CsvImporter;
+use paslandau\PageRank\Node;
 
 class TestController extends Controller
 {
@@ -23,9 +20,9 @@ class TestController extends Controller
     public function __construct()
     {
         $this->goutteClient = new Client();
-        $this->guzzleClient = new GuzzleClient(array(
+        $this->guzzleClient = new GuzzleClient([
             'timeout' => 60,
-        ));
+        ]);
         $this->goutteClient->setClient($this->guzzleClient);
     }
 
@@ -47,12 +44,12 @@ class TestController extends Controller
     public function getPagerank()
     {
         $hasHeader = true;
-        $sourceColumn = "linkFrom";
-        $destinationColumn = "linkTo";
-        $encoding = "utf-8";
-        $delimiter = ",";
+        $sourceColumn = 'linkFrom';
+        $destinationColumn = 'linkTo';
+        $encoding = 'utf-8';
+        $delimiter = ',';
         $csvImporter = new CsvImporter($hasHeader, $sourceColumn, $destinationColumn, $encoding, $delimiter);
-        $pathToFile = public_path() . "/count-node-10000-v2.csv";
+        $pathToFile = public_path().'/count-node-10000-v2.csv';
 
         $graph = $csvImporter->import($pathToFile);
 
@@ -99,8 +96,8 @@ class TestController extends Controller
 
     public function pretreatmentComment()
     {
-        $comment = "Thực sự là mình rất sợ trà sữa trân châu. Hầu hết các cửa hàng toàn nhập nguyên liệu từ Trung Quốc với gía rất rẻ, vì mình có thằng bạn nó cùng làm quán trà sữa nó toàn lấy từ Trung Quốc. Thế mới có lãi cao vì thuê mặt bằng rất đắt đỏ rồi. Nên các bạn hãy cân nhắc có nên dùng trà sữa không nhé";
-        
+        $comment = 'Thực sự là mình rất sợ trà sữa trân châu. Hầu hết các cửa hàng toàn nhập nguyên liệu từ Trung Quốc với gía rất rẻ, vì mình có thằng bạn nó cùng làm quán trà sữa nó toàn lấy từ Trung Quốc. Thế mới có lãi cao vì thuê mặt bằng rất đắt đỏ rồi. Nên các bạn hãy cân nhắc có nên dùng trà sữa không nhé';
+
         // echo $comment . "</br>";
 
         // Tách câu
@@ -109,19 +106,19 @@ class TestController extends Controller
         // var_dump($sentences);
         // echo "</br>";
 
-        $segments = array();
-        
+        $segments = [];
+
         // Tách dấu câu
         foreach ($sentences as $key => $sentence) {
             $array = explode(',', $sentence);
             $segments = array_merge($segments, $array);
         }
 
-        $arr = array();
+        $arr = [];
 
         foreach ($segments as $key => $segment) {
             // Thực hiện tách từ bằng việc gọi đến API viết bằng java sử dụng vn_tokenizer
-            $res = $this->guzzleClient->request('GET', 'http://localhost:8080/rest_glassfish_vn_tokenizer_war_exploded/api/v2/vn_tokenizer/' . $segment);
+            $res = $this->guzzleClient->request('GET', 'http://localhost:8080/rest_glassfish_vn_tokenizer_war_exploded/api/v2/vn_tokenizer/'.$segment);
 
             $contents = $res->getBody()->getContents();
 
@@ -132,70 +129,71 @@ class TestController extends Controller
                 $word = explode(';', $value)[1];
 
                 // Loại bỏ chữ số
-                if(!preg_match('/[0-9]/', $word)) {
+                if (!preg_match('/[0-9]/', $word)) {
                     // Chuyển thành chữ thường
-                    $arr[] = strtolower($word);                     
+                    $arr[] = strtolower($word);
                 }
-
             }
         }
 
         // $arr = $this->stopwordsDelete($arr);
         $this->scoreComment($arr);
-        
-        return;
     }
 
     /**
-     * Loại bỏ từ dừng trong mảng các từ đưa vào
-     * @param  array $comments [description]
+     * Loại bỏ từ dừng trong mảng các từ đưa vào.
+     *
+     * @param array $comments [description]
+     *
      * @return array
      */
     public function stopwordsDelete($comments)
     {
         try {
-            $result = array();
-            if (File::exists('Assignment02/vietnamese-stopwords.txt'))
-            {
-                $stopwords = array(); // Mảng chứa các từ dừng
-                $stopwordsFile = File('Assignment02/vietnamese-stopwords.txt');
+            $result = [];
+            if (File::exists('Assignment02/vietnamese-stopwords.txt')) {
+                $stopwords = []; // Mảng chứa các từ dừng
+                $stopwordsFile = file('Assignment02/vietnamese-stopwords.txt');
                 foreach ($stopwordsFile as $line) {
                     $stopwords[] = trim($line);
                 }
 
                 foreach ($comments as $comment) {
-                    if(!in_array($comment, $stopwords)) {
+                    if (!in_array($comment, $stopwords)) {
                         $result[] = $comment;
                     }
                 }
             }
+
             return $result;
         } catch (Illuminate\Filesystem\FileNotFoundException $exception) {
             Log::error("The file doesn't exist");
         }
     }
 
-
     /**
-     * Tính toán điểm của đoạn comment
-     * @param  array $comments [description]
+     * Tính toán điểm của đoạn comment.
+     *
+     * @param array $comments [description]
+     *
      * @return int
      */
     public function scoreComment($comments)
     {
         $score = 0;
-        Excel::load('Assignment02/Test.xlsx', function($reader) {
+        Excel::load('Assignment02/Test.xlsx', function ($reader) {
             $results = $reader->all();
             // foreach ($results as $result) {
             //     echo $result->english . "</br>";
             // }
         });
+
         return $score;
     }
 
     public function get600Toeic()
     {
-        $url = "http://600tuvungtoeic.com/index.php?mod=practice&id=1&page=1";
+        $url = 'http://600tuvungtoeic.com/index.php?mod=practice&id=1&page=1';
         $crawler = $this->goutteClient->request('GET', $url);
         dd($crawler->filter('div.kiemtra2')->html());
     }

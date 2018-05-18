@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class AddViewsCountToPosts extends Migration
 {
@@ -13,7 +13,7 @@ class AddViewsCountToPosts extends Migration
      */
     public function up()
     {
-        Schema::table('posts', function(Blueprint $table) {
+        Schema::table('posts', function (Blueprint $table) {
             $table->integer('views_count')->default(0)->after('image')->unsigned();
         });
     }
@@ -25,7 +25,7 @@ class AddViewsCountToPosts extends Migration
      */
     public function down()
     {
-        Schema::table('posts', function(Blueprint $table) {
+        Schema::table('posts', function (Blueprint $table) {
             $table->dropColumn('views_count');
         });
     }

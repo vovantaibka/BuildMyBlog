@@ -1,58 +1,57 @@
-<?php 
+<?php
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-
 use App\CategoryAudio;
+use App\Http\Controllers\Controller;
 
 class EnglishController extends Controller
 {
-	public function getAllCategories()
-	{
-		$categories = CategoryAudio::all();
+    public function getAllCategories()
+    {
+        $categories = CategoryAudio::all();
 
-		foreach ($categories as $category) {
-			$category->slug = $this->getSlug($category->name);
-		}
+        foreach ($categories as $category) {
+            $category->slug = $this->getSlug($category->name);
+        }
 
-		return $categories;
-	}
+        return $categories;
+    }
 
-	public function getSlug($name)
-	{
-		$name = strtolower($name);
-		$arr = explode(' ', $name);
-		$slug = implode('-', $arr);
-		return $slug;
-	}
+    public function getSlug($name)
+    {
+        $name = strtolower($name);
+        $arr = explode(' ', $name);
+        $slug = implode('-', $arr);
 
-	public function getName($slug)
-	{
-		$arr = explode('-', $slug);
-		$arrUpper = array();
-		foreach ($arr as $word) {
-			$word = ucfirst($word);
-			array_push($arrUpper, $word);
-		}
-		$name = implode(' ', $arrUpper);
-		return $name;
-	}
+        return $slug;
+    }
 
-	public function getIndexWithCategory($categoryId)
-	{
-		$category = CategoryAudio::find($categoryId);
+    public function getName($slug)
+    {
+        $arr = explode('-', $slug);
+        $arrUpper = [];
+        foreach ($arr as $word) {
+            $word = ucfirst($word);
+            array_push($arrUpper, $word);
+        }
+        $name = implode(' ', $arrUpper);
 
-		$audios = $category->audios()->get();
+        return $name;
+    }
 
-		$view = view('english.medialist')->withAudios($audios);
+    public function getIndexWithCategory($categoryId)
+    {
+        $category = CategoryAudio::find($categoryId);
 
-		$content = $view->render();
+        $audios = $category->audios()->get();
 
-		return response()->json(array(
-			'data' => $content
-		));
-	}
+        $view = view('english.medialist')->withAudios($audios);
+
+        $content = $view->render();
+
+        return response()->json([
+            'data' => $content,
+        ]);
+    }
 }
-?>

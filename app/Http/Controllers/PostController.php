@@ -2,19 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Http\Requests;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
+use App\Category;
+use App\Post;
+use App\Tag;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-
 //use App\Http\Controllers\Controller;
 
-use App\Post;
-use App\Category;
-use App\Tag;
-use Session;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 use Image;
+use Session;
 use Storage;
 
 class PostController extends Controller
@@ -42,44 +40,46 @@ class PostController extends Controller
     {
         $categories = Category::all();
         $tags = Tag::all();
+
         return view('posts.create')->withCategories($categories)->withTags($tags);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if($request->action === "create") {
+        if ($request->action === 'create') {
 
             // validate the data. Info https://laravel.com/docs/5.4/validation#available-validation-rules
-            $this->validate($request, array(
-                'title' => 'required|max:255',
-                'slug' => 'required|alpha_dash|min:5|max:255',
+            $this->validate($request, [
+                'title'       => 'required|max:255',
+                'slug'        => 'required|alpha_dash|min:5|max:255',
                 'category_id' => 'required|integer',
-                'body' => 'required'
-            ));
+                'body'        => 'required',
+            ]);
 
             $user = Auth::user();
-            
+
             // store in the database
-            $post = new Post;
+            $post = new Post();
 
             $post->title = $request->title;
             $post->slug = $request->slug;
             $post->category_id = $request->category_id;
             $post->body = $request->body;
-            
+
             $post->user_id = $user->id;
 
             // Save image
             if ($request->hasFile('featured_image')) {
                 $image = $request->file('featured_image');
-                $filename = time() . '.' . $image->getClientOriginalExtension();
-                $location = public_path('imgs/' . $filename);
+                $filename = time().'.'.$image->getClientOriginalExtension();
+                $location = public_path('imgs/'.$filename);
                 Image::make($image)->widen(362)->save($location);
 
                 $post->image = $filename;
@@ -94,49 +94,52 @@ class PostController extends Controller
             }
 
             Session::flash('success', 'The blog post was successfully save!');
-
         } else {
-            $this->update($request, $request->post_id);            
+            $this->update($request, $request->post_id);
         }
-        return redirect()->route('admin.main', 'post'); 
+
+        return redirect()->route('admin.main', 'post');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
         $post = Post::find($id);
+
         return view('posts.show')->withPost($post);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
         $post = Post::find($id);
         $categories = Category::all();
-        $cats = array();
+        $cats = [];
 
         foreach ($categories as $category) {
             $cats[$category->id] = $category->name;
         }
 
         $tags = Tag::all();
-        $tags2 = array();
+        $tags2 = [];
 
         foreach ($tags as $tag) {
             $tags2[$tag->id] = $tag->name;
         }
 
-        $image = $post->image;;
+        $image = $post->image;
 
         return view('posts.edit')->withPost($post)->withCategories($cats)->withTags($tags2)->withImage($image);
     }
@@ -144,8 +147,9 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -154,22 +158,21 @@ class PostController extends Controller
         $post = Post::find($id);
 
         if ($request->input('slug') == $post->slug) {
-            $this->validate($request, array(
-                'title' => 'required|max:255',
-                'category_id' => 'required|integer',
-                'body' => 'required',
-                'featured_image' => 'image'
-            ));
+            $this->validate($request, [
+                'title'          => 'required|max:255',
+                'category_id'    => 'required|integer',
+                'body'           => 'required',
+                'featured_image' => 'image',
+            ]);
         } else {
-            $this->validate($request, array(
-                'title' => 'required|max:255',
-                'slug' => 'required|alpha_dash|min:5|max:255', //Không cần dùng thêm: unique:posts,slug
-                'category_id' => 'required|integer',
-                'body' => 'required',
-                'featured_image' => 'image'
-            ));
+            $this->validate($request, [
+                'title'          => 'required|max:255',
+                'slug'           => 'required|alpha_dash|min:5|max:255', //Không cần dùng thêm: unique:posts,slug
+                'category_id'    => 'required|integer',
+                'body'           => 'required',
+                'featured_image' => 'image',
+            ]);
         }
-
 
         $post->title = $request->input('title');
         $post->slug = $request->input('slug');
@@ -178,8 +181,8 @@ class PostController extends Controller
 
         if ($request->hasFile('featured_image')) {
             $image = $request->file('featured_image');
-            $filename = time() . '.' . $image->getClientOriginalExtension();
-            $location = public_path('imgs/' . $filename);
+            $filename = time().'.'.$image->getClientOriginalExtension();
+            $location = public_path('imgs/'.$filename);
             Image::make($image)->widen(362)->save($location);
             $oldFilename = $post->image;
             $post->image = $filename;
@@ -191,7 +194,7 @@ class PostController extends Controller
         if (isset($request->tags)) {
             $post->tags()->sync($request->tags);
         } else {
-            $post->tags()->sync(array());
+            $post->tags()->sync([]);
         }
 
         //Set flash data with success message
@@ -201,7 +204,8 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -214,6 +218,7 @@ class PostController extends Controller
         $post->delete();
 
         Session::flash('success', 'The post was successfully deleted');
+
         return redirect()->route('posts.index');
     }
 }

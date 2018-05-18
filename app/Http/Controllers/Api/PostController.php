@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Category;
+use App\Http\Controllers\Controller;
+use App\Post;
+use App\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use DB;
-use App\Post;
-use App\Category;
-use App\Tag;
 use Image;
 use Storage;
 
@@ -24,13 +22,13 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::with('category')->get();
-        $categories = Category::select('id','name')->get();
+        $categories = Category::select('id', 'name')->get();
         $tags = Tag::select('id', 'name')->get();
 
         return response()->json([
-            'posts' => $posts,
+            'posts'      => $posts,
             'categories' => $categories,
-            'tags' => $tags
+            'tags'       => $tags,
         ]);
     }
 
@@ -47,21 +45,22 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        $this->validate($request, array(
-            'title' => 'required|max:255',
-            'slug' => 'required|alpha_dash|min:5|max:255',
+        $this->validate($request, [
+            'title'       => 'required|max:255',
+            'slug'        => 'required|alpha_dash|min:5|max:255',
             'category_id' => 'required|integer',
-            'body' => 'required'
-        ));
+            'body'        => 'required',
+        ]);
 
         $user = Auth::user();
 
-        $post = new Post;
+        $post = new Post();
 
         $post->title = $request->title;
         $post->slug = $request->slug;
@@ -70,9 +69,9 @@ class PostController extends Controller
 
         $post->user_id = $user->id;
 
-        if($request->get('image')) {
+        if ($request->get('image')) {
             $image = $request->get('image');
-            $fileImageName = time().'.' . explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
+            $fileImageName = time().'.'.explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
             \Image::make($request->get('image'))->widen(362)->save(public_path('imgs/').$fileImageName);
             $post->image = $fileImageName;
         }
@@ -89,7 +88,8 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -100,7 +100,8 @@ class PostController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -111,8 +112,9 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -123,7 +125,8 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

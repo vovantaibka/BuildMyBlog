@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Support\Facades\Log;
-use App\User;
-use Session;
 use Image;
+use Session;
 use Storage;
 
 class AccountController extends Controller
@@ -39,7 +37,8 @@ class AccountController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -50,7 +49,8 @@ class AccountController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -63,7 +63,8 @@ class AccountController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -74,8 +75,9 @@ class AccountController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -83,13 +85,13 @@ class AccountController extends Controller
         //Validate the data
         $user = User::find($id);
 
-        $this->validate($request, array(
-            'name' => 'required|max:255',
+        $this->validate($request, [
+            'name'      => 'required|max:255',
             'birth_day' => 'nullable|date',
-            'gender' => 'nullable',
-            'address' => 'nullable',
-            'phone' => 'nullable'
-        ));
+            'gender'    => 'nullable',
+            'address'   => 'nullable',
+            'phone'     => 'nullable',
+        ]);
 
         $user->name = $request->input('name');
         $user->birth_day = $request->input('birth_day');
@@ -107,7 +109,8 @@ class AccountController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -121,9 +124,11 @@ class AccountController extends Controller
     // }
 
     /**
-     * [uploadImageFile description]
-     * @param  Request $request
-     * @param  int  $id
+     * [uploadImageFile description].
+     *
+     * @param Request $request
+     * @param int     $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function uploadImageFile(Request $request, $id)
@@ -134,9 +139,9 @@ class AccountController extends Controller
         //     'image' => 'required|image'
         // ]);
 
-        if($request->get('image')) {
+        if ($request->get('image')) {
             $image = $request->get('image');
-            $fileImageName = time().'.' . explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
+            $fileImageName = time().'.'.explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
             \Image::make($request->get('image'))->heighten(200)->save(public_path('imgs/').$fileImageName);
             $oldFilename = $user->image;
             $user->image = $fileImageName;
@@ -144,7 +149,7 @@ class AccountController extends Controller
 
             $user->save();
 
-            return response()->json(['error' => false, 'fileImageName' => $fileImageName]); 
+            return response()->json(['error' => false, 'fileImageName' => $fileImageName]);
         } else {
             return response()->json(['errors' => true]);
         }

@@ -57,7 +57,7 @@ return [
 
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'Francy@truplus.vn'),
-        'name' => env('MAIL_FROM_NAME', 'Laravel'),
+        'name'    => env('MAIL_FROM_NAME', 'Laravel'),
     ],
 
     /*

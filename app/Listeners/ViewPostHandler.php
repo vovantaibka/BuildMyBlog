@@ -3,8 +3,6 @@
 namespace App\Listeners;
 
 use App\Events\ViewPost;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Session\Store;
 
 class ViewPostHandler
@@ -24,12 +22,13 @@ class ViewPostHandler
     /**
      * Handle the event.
      *
-     * @param  ViewPost  $event
+     * @param ViewPost $event
+     *
      * @return void
      */
     public function handle(ViewPost $event)
     {
-        if(!$this->isPostViewed($event->post)) {
+        if (!$this->isPostViewed($event->post)) {
             $event->post->increment('views_count');
             $this->storePost($event->post);
         }
@@ -44,7 +43,7 @@ class ViewPostHandler
 
     public function storePost($post)
     {
-        $key = 'viewed_posts.' . $post->id;
+        $key = 'viewed_posts.'.$post->id;
         $this->session->put($key, time());
     }
 }

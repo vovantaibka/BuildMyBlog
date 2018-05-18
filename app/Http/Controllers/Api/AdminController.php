@@ -2,17 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Auth\Middleware\Authenticate;
-use App\User;
-use App\Post;
-use App\Category;
-use App\Tag;
 use App\Audio;
+use App\Category;
 use App\CategoryAudio;
+use App\Http\Controllers\Controller;
+use App\Post;
+use App\Tag;
+use App\User;
 use Session;
-use Image;
 use Storage;
 
 class AdminController extends Controller
@@ -47,9 +44,10 @@ class AdminController extends Controller
                 break;
 
             default:
-                # code...
+                // code...
                 break;
         }
+
         return $object;
     }
 
@@ -59,48 +57,49 @@ class AdminController extends Controller
 
         switch ($objectType) {
             case 'post':
-                $tags = array();
+                $tags = [];
                 foreach ($object->tags as $tag) {
                     $tags[] = $tag->id;
                 }
+
                 return response()->json([
-                    'id' => $object->id,
-                    'title' => $object->title,
-                    'slug' => $object->slug,
-                    'body' => $object->body,
-                    'category' => $object->category->name,
-                    'category_id' => $object->category->id,
-                    'tags' => $object->tags,
-                    'tags_id' => $tags,
+                    'id'             => $object->id,
+                    'title'          => $object->title,
+                    'slug'           => $object->slug,
+                    'body'           => $object->body,
+                    'category'       => $object->category->name,
+                    'category_id'    => $object->category->id,
+                    'tags'           => $object->tags,
+                    'tags_id'        => $tags,
                     'featured_image' => $object->image,
-                    'img_url' => asset('imgs/' . $object->image),
-                    'action' => redirect()->route('posts.update', $object->id)
+                    'img_url'        => asset('imgs/'.$object->image),
+                    'action'         => redirect()->route('posts.update', $object->id),
                 ]);
                 break;
 
             case 'category':
                 return response()->json([
-                    'id' => $object->id,
-                    'name' => $object->name
+                    'id'   => $object->id,
+                    'name' => $object->name,
                 ]);
                 break;
 
             case 'tag':
                 return response()->json([
-                    'id' => $object->id,
-                    'name' => $object->name
+                    'id'   => $object->id,
+                    'name' => $object->name,
                 ]);
                 break;
 
             case 'category_audio':
                 return response()->json([
-                    'id' => $object->id,
-                    'name' => $object->name
+                    'id'   => $object->id,
+                    'name' => $object->name,
                 ]);
                 break;
 
             default:
-                # code...
+                // code...
                 break;
         }
     }
@@ -160,14 +159,14 @@ class AdminController extends Controller
         }
 
         $content = $view->render();
-        return response()->json(array(
-            'data' => $content
-        ));
+
+        return response()->json([
+            'data' => $content,
+        ]);
     }
 
     public function deleteObject($objectType, $id)
     {
-
         $object = null;
 
         switch ($objectType) {
@@ -197,19 +196,20 @@ class AdminController extends Controller
 
                 if ($audios->count()) {
                     Session::flash('error', 'Category can not delete');
+
                     return response()->json(['result' => 'error']);
                 }
                 break;
 
             default:
-                # code...
+                // code...
                 break;
         }
         // $object = $this->getObject($objectType, $id);
 
         $object->delete();
 
-        Session::flash('success', 'The' . $objectType . ' was successfully deleted');
+        Session::flash('success', 'The'.$objectType.' was successfully deleted');
 
         return response()->json(['result' => 'success']);
     }
